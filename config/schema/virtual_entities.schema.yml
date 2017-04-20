@@ -1,0 +1,21 @@
+# Schema for the configuration files of the virtual_entities module.
+
+virtual_entities.type.*:
+  type: config_entity
+  label: 'Virtual entity type'
+  mapping:
+    name:
+      type: label
+      label: 'Name'
+    type:
+      type: string
+      label: 'Machine-readable name'
+    description:
+      type: text
+      label: 'Description'
+    help:
+      type: text
+      label: 'Explanation or submission guidelines'
+    endpoint:
+      type: string
+      label: 'Endpoint'
