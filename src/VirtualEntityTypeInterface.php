@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\virtual_entities\VirtualEntityTypeInterface.
- */
-
 namespace Drupal\virtual_entities;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
@@ -19,21 +14,21 @@ interface VirtualEntityTypeInterface extends ConfigEntityInterface {
   /**
    * Gets the description.
    *
-   * @return string
+   * @return string The description of this entity type.
    */
   public function getDescription();
 
   /**
    * Gets the help information.
    *
-   * @return string
+   * @return string The help information of this entity type.
    */
   public function getHelp();
 
   /**
    * Gets the client endpoint.
    *
-   * @return string
+   * @return string The client endpoint of this entity type.
    */
   public function getEndpoint();
 

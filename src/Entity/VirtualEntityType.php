@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\virtual_entities\Entity\VirtualEntityType.
- */
-
 namespace Drupal\virtual_entities\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
