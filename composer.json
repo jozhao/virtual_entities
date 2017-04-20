@@ -1,0 +1,29 @@
+{
+    "name": "drupal/virtual_entities",
+    "description": "Provides the 'Virtual Entities' to a Drupal website.",
+    "keywords": [
+        "drupal-module",
+        "drupal-8",
+        "drupal"
+    ],
+    "type": "drupal-module",
+    "license": "Apache-2.0",
+    "homepage": "https://www.drupal.org/project/virtual_entities",
+    "authors": [
+        {
+            "name": "Joseph Zhao",
+            "email": "joseph.zhao@xing.net.au"
+        },
+        {
+            "name": "Jason Guo",
+            "email": "jason.guo@xing.net.au"
+        }
+    ],
+    "support": {
+        "issues": "https://drupal.org/project/issues/virtual_entities",
+        "irc": "irc://irc.freenode.org/drupal-contribute",
+        "source": "https://cgit.drupalcode.org/virtual_entities"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

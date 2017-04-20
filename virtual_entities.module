@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Main functions of the module.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function virtual_entities_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.virtual_entities':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Provides the \'Virtual Entities\' to a Drupal website.') . '</p>';
+
+      return $output;
+  }
+}
