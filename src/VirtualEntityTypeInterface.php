@@ -23,7 +23,7 @@ interface VirtualEntityTypeInterface extends ConfigEntityInterface {
    * Gets the help information.
    *
    * @return string
-   *  The help information of this entity type.
+   *   The help information of this entity type.
    */
   public function getHelp();
 
@@ -31,7 +31,7 @@ interface VirtualEntityTypeInterface extends ConfigEntityInterface {
    * Gets the client endpoint.
    *
    * @return string
-   *  The client endpoint of this entity type.
+   *   The client endpoint of this entity type.
    */
   public function getEndpoint();
 
