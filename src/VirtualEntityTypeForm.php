@@ -90,6 +90,14 @@ class VirtualEntityTypeForm extends BundleEntityFormBase {
       '#description' => t('Virtual entity type description.'),
     ];
 
+    $form['endpoint'] = [
+      '#title' => t('Endpoint'),
+      '#type' => 'textfield',
+      '#default_value' => $type->getEndpoint(),
+      '#description' => t('Virtual entity endpoint.'),
+      '#required' => TRUE,
+    ];
+
     return $this->protectBundleIdElement($form);
   }
 
