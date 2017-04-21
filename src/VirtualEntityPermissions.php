@@ -19,9 +19,10 @@ class VirtualEntityPermissions {
    *
    * @return array
    *   The virtual entity type permissions.
-   *   @see \Drupal\user\PermissionHandlerInterface::getPermissions()
+   *
+   * @see \Drupal\user\PermissionHandlerInterface::getPermissions()
    */
-  public function VirtualEntityTypePermissions() {
+  public function virtualEntityTypePermissions() {
     $perms = [];
     // Generate virtual entity permissions for all virtual entities types.
     foreach (VirtualEntityType::loadMultiple() as $type) {

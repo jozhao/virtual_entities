@@ -4,4 +4,4 @@ administer virtual entity types:
   restrict access: TRUE
 
 permission_callbacks:
-  - \Drupal\virtual_entities\VirtualEntityPermissions::VirtualEntityTypePermissions
+  - \Drupal\virtual_entities\VirtualEntityPermissions::virtualEntityTypePermissions
