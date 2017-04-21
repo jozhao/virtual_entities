@@ -9,7 +9,7 @@ entity.virtual_entity_type.collection:
 virtual_entity.type_add:
   path: '/admin/structure/virtual-entity-types/add'
   defaults:
-    _entity_form: 'node_type.add'
+    _entity_form: 'virtual_entity_type.add'
     _title: 'Add virtual entity type'
   requirements:
     _permission: 'administer virtual entity types'

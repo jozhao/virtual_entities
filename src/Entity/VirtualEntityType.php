@@ -10,7 +10,7 @@ use Drupal\virtual_entities\VirtualEntityTypeInterface;
  *
  * @ConfigEntityType(
  *   id = "virtual_entity_type",
- *   label = @Translation("Virtual Entity type"),
+ *   label = @Translation("Virtual entity type"),
  *   handlers = {
  *     "access" = "Drupal\virtual_entities\VirtualEntityTypeAccessControlHandler",
  *     "form" = {
@@ -83,6 +83,14 @@ class VirtualEntityType extends ConfigEntityBundleBase implements VirtualEntityT
    */
   public function id() {
     return $this->type;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isLocked() {
+    $locked = \Drupal::state()->get('virtual_entity.type.locked');
+    return isset($locked[$this->id()]) ? $locked[$this->id()] : FALSE;
   }
 
   /**
