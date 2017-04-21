@@ -98,6 +98,13 @@ class VirtualEntityTypeForm extends BundleEntityFormBase {
       '#required' => TRUE,
     ];
 
+    $form['additional_settings'] = array(
+      '#type' => 'vertical_tabs',
+      '#attached' => array(
+        'library' => array('node/drupal.content_types'),
+      ),
+    );
+
     return $this->protectBundleIdElement($form);
   }
 
@@ -110,6 +117,38 @@ class VirtualEntityTypeForm extends BundleEntityFormBase {
     $actions['delete']['#value'] = t('Delete virtual entity type');
 
     return $actions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    parent::validateForm($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function save(array $form, FormStateInterface $form_state) {
+    $type = $this->entity;
+    $type->set('type', trim($type->id()));
+    $type->set('label', trim($type->label()));
+
+    $status = $type->save();
+
+    $t_args = ['%name' => $type->label()];
+
+    if ($status == SAVED_UPDATED) {
+      drupal_set_message(t('The virtual entity type %name has been updated.', $t_args));
+    }
+    elseif ($status == SAVED_NEW) {
+      drupal_set_message(t('The virtual entity type %name has been added.', $t_args));
+      $context = array_merge($t_args, ['link' => $type->link($this->t('View'), 'collection')]);
+      $this->logger('virtual_entity')->notice('Added virtual entity type %name.', $context);
+    }
+
+    $this->entityManager->clearCachedFieldDefinitions();
+    $form_state->setRedirectUrl($type->urlInfo('collection'));
   }
 
 }

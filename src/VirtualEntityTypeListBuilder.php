@@ -23,6 +23,7 @@ class VirtualEntityTypeListBuilder extends EntityListBuilder {
       'data' => t('Description'),
       'class' => [RESPONSIVE_PRIORITY_MEDIUM],
     ];
+
     return $header + parent::buildHeader();
   }
 
@@ -36,6 +37,7 @@ class VirtualEntityTypeListBuilder extends EntityListBuilder {
     ];
     $row['endpoint']['data'] = ['#markup' => $entity->getEndpoint()];
     $row['description']['data'] = ['#markup' => $entity->getDescription()];
+
     return $row + parent::buildRow($entity);
   }
 
@@ -49,6 +51,7 @@ class VirtualEntityTypeListBuilder extends EntityListBuilder {
     if (isset($operations['edit'])) {
       $operations['edit']['weight'] = 30;
     }
+
     return $operations;
   }
 
@@ -58,10 +61,10 @@ class VirtualEntityTypeListBuilder extends EntityListBuilder {
   public function render() {
     $build = parent::render();
     $build['table']['#empty'] = $this->t('No virtual entity types available. <a href=":link">Add virtual entity type</a>.', [
-      ':link' => Url::fromRoute('virtual_entity.type_add')->toString()
+      ':link' => Url::fromRoute('virtual_entity.type_add')->toString(),
     ]);
+
     return $build;
   }
-
 
 }
