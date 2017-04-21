@@ -7,6 +7,7 @@ use Drupal\virtual_entities\VirtualEntityInterface;
 
 /**
  * Defines the virtual entity class.
+ *
  * @ContentEntityType(
  *   id = "virtual_entity",
  *   label = @Translation("Virtual entity"),
