@@ -1,5 +1,5 @@
 administer virtual entity types:
-  title: 'Administer Virtual Entity types'
+  title: 'Administer virtual entity types'
   description: 'Maintain the types of virtual entities.'
   restrict access: TRUE
 
