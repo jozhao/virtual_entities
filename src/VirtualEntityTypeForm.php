@@ -78,7 +78,7 @@ class VirtualEntityTypeForm extends BundleEntityFormBase {
       '#disabled' => $type->isLocked(),
       '#machine_name' => [
         'exists' => ['Drupal\virtual_entities\Entity\VirtualEntityType', 'load'],
-        'source' => ['name'],
+        'source' => ['label'],
       ],
       '#description' => t('A unique machine-readable name for this content type. It must only contain lowercase letters, numbers, and underscores.'),
     ];
