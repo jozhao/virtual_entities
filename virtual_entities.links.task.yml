@@ -1,0 +1,8 @@
+entity.virtual_entity_type.edit_form:
+  title: 'Edit'
+  route_name: entity.virtual_entity_type.edit_form
+  base_route: entity.virtual_entity_type.edit_form
+entity.virtual_entity_type.collection:
+  title: 'List'
+  route_name: entity.virtual_entity_type.collection
+  base_route: entity.virtual_entity_type.collection
