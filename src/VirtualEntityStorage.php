@@ -5,14 +5,9 @@ namespace Drupal\virtual_entities;
 use Drupal\Core\Entity\EntityInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Entity\EntityStorageException;
-use Drupal\Component\Plugin\PluginManagerInterface;
-use GuzzleHttp\ClientInterface;
 use Drupal\Core\Entity\ContentEntityStorageBase;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Cache\CacheBackendInterface;
 
 /**
  * Defines the storage handler class.
