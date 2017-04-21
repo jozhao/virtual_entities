@@ -13,3 +13,18 @@ virtual_entity.type_add:
     _title: 'Add virtual entity type'
   requirements:
     _permission: 'administer virtual entity types'
+
+entity.virtual_entity_type.edit_form:
+  path: '/admin/structure/virtual-entity-types/manage/{virtual_entity_type}'
+  defaults:
+    _entity_form: 'virtual_entity_type.edit'
+  requirements:
+    _permission: 'administer external entity types'
+
+entity.virtual_entity_type.delete_form:
+  path: '/admin/structure/virtual-entity-types/manage/{virtual_entity_type}/delete'
+  defaults:
+    _entity_form: 'virtual_entity_type.delete'
+    _title: 'Delete'
+  requirements:
+    _entity_access: 'virtual_entity_type.delete'
