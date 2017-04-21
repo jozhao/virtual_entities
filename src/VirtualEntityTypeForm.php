@@ -98,12 +98,12 @@ class VirtualEntityTypeForm extends BundleEntityFormBase {
       '#required' => TRUE,
     ];
 
-    $form['additional_settings'] = array(
+    $form['additional_settings'] = [
       '#type' => 'vertical_tabs',
-      '#attached' => array(
-        'library' => array('node/drupal.content_types'),
-      ),
-    );
+      '#attached' => [
+        'library' => ['node/drupal.content_types'],
+      ],
+    ];
 
     return $this->protectBundleIdElement($form);
   }
@@ -124,6 +124,12 @@ class VirtualEntityTypeForm extends BundleEntityFormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
+
+    $id = trim($form_state->getValue('type'));
+    // '0' is invalid, since elsewhere we check it using empty().
+    if ($id == '0') {
+      $form_state->setErrorByName('type', $this->t("Invalid machine-readable name. Enter a name other than %invalid.", ['%invalid' => $id]));
+    }
   }
 
   /**
