@@ -1,0 +1,5 @@
+entity.virtual_entity_type.collection:
+  title: 'Virtual entity types'
+  parent: system.admin_structure
+  description: 'Manage virtual entity types.'
+  route_name: entity.virtual_entity_type.collection

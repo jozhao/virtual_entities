@@ -1,0 +1,5 @@
+virtual_entity.type_add:
+  route_name: virtual_entity.type_add
+  title: 'Add virtual entity type'
+  appears_on:
+    - entity.virtual_entity_type.collection

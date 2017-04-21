@@ -1,0 +1,15 @@
+entity.virtual_entity_type.collection:
+  path: '/admin/structure/virtual-entity-types'
+  defaults:
+    _entity_list: 'virtual_entity_type'
+    _title: 'Virtual entity types'
+  requirements:
+    _permission: 'administer virtual entity types'
+
+virtual_entity.type_add:
+  path: '/admin/structure/virtual-entity-types/add'
+  defaults:
+    _entity_form: 'node_type.add'
+    _title: 'Add virtual entity type'
+  requirements:
+    _permission: 'administer virtual entity types'

@@ -20,7 +20,7 @@ use Drupal\virtual_entities\VirtualEntityTypeInterface;
  *     },
  *     "list_builder" = "Drupal\virtual_entities\VirtualEntityTypeListBuilder",
  *   },
- *   admin_permission = "administer Virtual Entity types",
+ *   admin_permission = "administer virtual entity types",
  *   config_prefix = "type",
  *   bundle_of = "virtual_entity",
  *   entity_keys = {

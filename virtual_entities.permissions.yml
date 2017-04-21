@@ -1,0 +1,7 @@
+administer virtual entity types:
+  title: 'Administer Virtual Entity types'
+  description: 'Maintain the types of virtual entities.'
+  restrict access: TRUE
+
+permission_callbacks:
+  - \Drupal\virtual_entities\VirtualEntityPermissions::VirtualEntityTypePermissions
