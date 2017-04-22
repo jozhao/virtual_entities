@@ -3,3 +3,8 @@ entity.virtual_entity_type.collection:
   parent: system.admin_structure
   description: 'Manage virtual entity types.'
   route_name: entity.virtual_entity_type.collection
+entity.virtual_entity.collection:
+  title: 'Virtual entities'
+  parent: system.admin_content
+  description: 'Virtual entities overview.'
+  route_name: entity.virtual_entity.collection

@@ -28,3 +28,6 @@ entity.virtual_entity_type.delete_form:
     _title: 'Delete'
   requirements:
     _entity_access: 'virtual_entity_type.delete'
+
+route_callbacks:
+  - 'entity.virtual_entities.routes::routes'

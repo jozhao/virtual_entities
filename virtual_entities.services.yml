@@ -1,0 +1,4 @@
+services:
+  entity.virtual_entities.routes:
+      class: Drupal\virtual_entities\Routing\RoutesVirtualEntity
+      arguments: ['@entity.manager']
