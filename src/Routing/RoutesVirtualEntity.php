@@ -6,6 +6,9 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Drupal\Core\Entity\EntityManagerInterface;
 
+/**
+ * Virtual entity routes.
+ */
 class RoutesVirtualEntity {
 
   /**
@@ -65,4 +68,5 @@ class RoutesVirtualEntity {
 
     return $route_collection;
   }
+
 }
