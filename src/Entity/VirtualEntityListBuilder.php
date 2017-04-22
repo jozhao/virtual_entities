@@ -19,7 +19,7 @@ class VirtualEntityListBuilder extends EntityListBuilder {
   public function load() {
     $entity_ids = $this->getEntityIds();
 
-    return 'test';
+    return $this->storage->loadMultiple($entity_ids);
   }
 
   /**
