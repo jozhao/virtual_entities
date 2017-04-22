@@ -38,6 +38,8 @@ use Drupal\virtual_entities\VirtualEntityTypeInterface;
  *     "description",
  *     "help",
  *     "endpoint",
+ *     "format",
+ *     "field_mappings",
  *   }
  * )
  */
@@ -79,6 +81,22 @@ class VirtualEntityType extends ConfigEntityBundleBase implements VirtualEntityT
   protected $endpoint;
 
   /**
+   * The format in which to make the requests for this entity type.
+   *
+   * For example: 'json'.
+   *
+   * @var string
+   */
+  protected $format = 'json';
+
+  /**
+   * The field mappings for this virtual entity type.
+   *
+   * @var array
+   */
+  protected $field_mappings = [];
+
+  /**
    * {@inheritdoc}
    */
   public function id() {
@@ -112,6 +130,20 @@ class VirtualEntityType extends ConfigEntityBundleBase implements VirtualEntityT
    */
   public function getEndpoint() {
     return $this->endpoint;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldMappings() {
+    return $this->field_mappings;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldMapping($field_name) {
+    return isset($this->field_mappings[$field_name]) ? $this->field_mappings[$field_name] : FALSE;
   }
 
 }

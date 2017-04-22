@@ -35,4 +35,23 @@ interface VirtualEntityTypeInterface extends ConfigEntityInterface {
    */
   public function getEndpoint();
 
+  /**
+   * Returns the field mappings of virtual entity type.
+   *
+   * @return array
+   *   An array associative array:
+   *     - key: The source property.
+   *     - value: The destination field.
+   */
+  public function getFieldMappings();
+
+  /**
+   * Returns the field mapping for the given field of this entity type.
+   *
+   * @return string|boolean
+   *   The name of the property this field is mapped to. FALSE if the mapping
+   *   doesn't exist.
+   */
+  public function getFieldMapping($field_name);
+
 }

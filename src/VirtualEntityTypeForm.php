@@ -105,6 +105,22 @@ class VirtualEntityTypeForm extends BundleEntityFormBase {
       ],
     ];
 
+    $form['field_mappings'] = array(
+      '#type' => 'details',
+      '#title' => $this->t('Field mappings'),
+      '#group' => 'additional_settings',
+      '#open' => TRUE,
+    );
+
+    foreach ($fields as $field) {
+      $form['field_mappings'][$field->getName()] = array(
+        '#title' => $field->getLabel(),
+        '#type' => 'textfield',
+        '#default_value' => $type->getFieldMapping($field->getName()),
+        '#required' => isset($base_fields[$field->getName()]),
+      );
+    }
+
     return $this->protectBundleIdElement($form);
   }
 
