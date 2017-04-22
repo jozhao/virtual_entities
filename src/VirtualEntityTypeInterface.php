@@ -48,7 +48,7 @@ interface VirtualEntityTypeInterface extends ConfigEntityInterface {
   /**
    * Returns the field mapping for the given field of this entity type.
    *
-   * @return string|boolean
+   * @return string|bool
    *   The name of the property this field is mapped to. FALSE if the mapping
    *   doesn't exist.
    */

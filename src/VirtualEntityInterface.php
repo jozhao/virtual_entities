@@ -17,4 +17,13 @@ interface VirtualEntityInterface extends ContentEntityInterface {
    */
   public function getType();
 
+  /**
+   * Gets the virtual entity identifier.
+   *
+   * @return string|int|null
+   *   The external entity identifier, or NULL if the object does not yet have
+   *   an external identifier.
+   */
+  public function virtualId();
+
 }

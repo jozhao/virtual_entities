@@ -62,6 +62,10 @@ class VirtualEntityTypeForm extends BundleEntityFormBase {
       $node = $this->entityManager->getStorage('virtual_entity')->create(['type' => $type->id()]);
     }
 
+    // Remove the not used fields.
+    unset($fields[$this->entityManager->getDefinition('external_entity')->getKey('uuid')]);
+    unset($fields[$this->entityManager->getDefinition('external_entity')->getKey('bundle')]);
+
     $form['label'] = [
       '#title' => t('Name'),
       '#type' => 'textfield',
@@ -105,20 +109,20 @@ class VirtualEntityTypeForm extends BundleEntityFormBase {
       ],
     ];
 
-    $form['field_mappings'] = array(
+    $form['field_mappings'] = [
       '#type' => 'details',
       '#title' => $this->t('Field mappings'),
       '#group' => 'additional_settings',
       '#open' => TRUE,
-    );
+    ];
 
     foreach ($fields as $field) {
-      $form['field_mappings'][$field->getName()] = array(
+      $form['field_mappings'][$field->getName()] = [
         '#title' => $field->getLabel(),
         '#type' => 'textfield',
         '#default_value' => $type->getFieldMapping($field->getName()),
         '#required' => isset($base_fields[$field->getName()]),
-      );
+      ];
     }
 
     return $this->protectBundleIdElement($form);
