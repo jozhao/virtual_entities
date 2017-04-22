@@ -63,6 +63,9 @@ class VirtualEntityStorage extends ContentEntityStorageBase {
     // TODO: Implement doLoadMultiple() method.
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function has($id, EntityInterface $entity) {
     // TODO: Implement has() method.
   }
