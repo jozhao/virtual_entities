@@ -69,7 +69,7 @@ class VirtualEntity extends ContentEntityBase implements VirtualEntityInterface 
    * {@inheritdoc}
    */
   public function id() {
-    return 'virtual' . '-' . self::getType() . '-' . self::virtualId();
+    return self::getType() . '-' . self::virtualId();
   }
 
   /**
