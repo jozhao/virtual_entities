@@ -49,17 +49,10 @@ class VirtualEntityTypeForm extends BundleEntityFormBase {
     if ($this->operation == 'add') {
       $form['#title'] = $this->t('Add virtual entity type');
       $fields = $this->entityManager->getBaseFieldDefinitions('virtual_entity');
-      // Create a node with a fake bundle using the type's UUID so that we can
-      // get the default values for workflow settings.
-      // @todo Make it possible to get default values without an entity.
-      //   https://www.drupal.org/node/2318187
-      // $node = $this->entityManager->getStorage('virtual_entity')->create(['type' => $type->uuid()]);
     }
     else {
       $form['#title'] = $this->t('Edit %label virtual entity type', ['%label' => $type->label()]);
       $fields = $this->entityManager->getFieldDefinitions('virtual_entity', $type->id());
-      // Create a node to get the current values for workflow settings fields.
-      // $node = $this->entityManager->getStorage('virtual_entity')->create(['type' => $type->id()]);
     }
 
     // Remove the not used fields.
