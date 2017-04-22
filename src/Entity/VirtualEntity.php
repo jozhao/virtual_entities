@@ -16,8 +16,8 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   label = @Translation("Virtual entity"),
  *   bundle_label = @Translation("Virtual entity type"),
  *   handlers = {
- *     "storage" = "Drupal\virtual_entities\VirtualEntityStorage",
- *     "storage_schema" = "Drupal\virtual_entities\VirtualEntityStorageSchema",
+ *     "storage" = "Drupal\virtual_entities\Storage\VirtualEntityStorage",
+ *     "storage_schema" = "Drupal\virtual_entities\Schema\VirtualEntityStorageSchema",
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
  *     "access" = "Drupal\virtual_entities\VirtualEntityAccessControlHandler",
  *     "form" = {
@@ -28,7 +28,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "route_provider" = {
  *       "html" = "Drupal\virtual_entities\Entity\VirtualEntityRouteProvider",
  *     },
- *     "list_builder" = "Drupal\virtual_entities\VirtualEntityListBuilder",
+ *     "list_builder" = "Drupal\virtual_entities\Entity\VirtualEntityListBuilder",
  *   },
  *   translatable = FALSE,
  *   entity_keys = {
