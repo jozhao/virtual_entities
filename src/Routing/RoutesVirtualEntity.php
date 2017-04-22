@@ -33,38 +33,18 @@ class RoutesVirtualEntity {
    */
   public function routes() {
     $route_collection = new RouteCollection();
-    $first = TRUE;
-    foreach ($this->entityStorage->loadMultiple() as $type) {
-      if ($first) {
-        $first = FALSE;
-        $route = new Route(
-          '/admin/content/virtual-entities',
-          [
-            '_controller' => '\Drupal\external_entities\Entity\Controller\ExternalEntityListController::listing',
-            'entity_type' => 'external_entity',
-            'bundle' => $type->id(),
-            '_title' => $type->label() . ' external entities',
-          ],
-          [
-            '_permission' => 'access virtual entities overview',
-          ]
-        );
-        $route_collection->add('entity.virtual_entity.collection', $route);
-      }
-      $route = new Route(
-        '/admin/content/virtual-entities/' . $type->id(),
-        [
-          '_controller' => '\Drupal\external_entities\Entity\Controller\ExternalEntityListController::listing',
-          'entity_type' => 'external_entity',
-          'bundle' => $type->id(),
-          '_title' => $type->label() . ' external entities',
-        ],
-        [
-          '_permission' => 'access virtual entities overview',
-        ]
-      );
-      $route_collection->add('entity.virtual_entity.' . $type->id(), $route);
-    }
+
+    $route = new Route(
+      '/admin/content/virtual-entities',
+      [
+        '_entity_list' => 'virtual_entity',
+        '_title' => 'Virtual entities',
+      ],
+      [
+        '_permission' => 'access virtual entities overview',
+      ]
+    );
+    $route_collection->add('entity.virtual_entity.collection', $route);
 
     return $route_collection;
   }

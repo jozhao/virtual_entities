@@ -6,3 +6,7 @@ entity.virtual_entity_type.collection:
   title: 'List'
   route_name: entity.virtual_entity_type.collection
   base_route: entity.virtual_entity_type.collection
+entity.virtual_entity.collection:
+  title: 'Virtual entities'
+  route_name: entity.virtual_entity.collection
+  base_route: system.admin_content
