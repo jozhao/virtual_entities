@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\virtual_entities;
+namespace Drupal\virtual_entities\Form;
 
 use Drupal\Core\Entity\BundleEntityFormBase;
 use Drupal\Core\Entity\EntityManagerInterface;

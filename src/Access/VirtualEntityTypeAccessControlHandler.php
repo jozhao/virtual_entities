@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\virtual_entities;
+namespace Drupal\virtual_entities\Access;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityAccessControlHandler;

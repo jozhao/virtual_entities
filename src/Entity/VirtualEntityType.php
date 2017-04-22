@@ -12,13 +12,13 @@ use Drupal\virtual_entities\VirtualEntityTypeInterface;
  *   id = "virtual_entity_type",
  *   label = @Translation("Virtual entity type"),
  *   handlers = {
- *     "access" = "Drupal\virtual_entities\VirtualEntityTypeAccessControlHandler",
+ *     "access" = "Drupal\virtual_entities\Access\VirtualEntityTypeAccessControlHandler",
  *     "form" = {
- *       "add" = "Drupal\virtual_entities\VirtualEntityTypeForm",
- *       "edit" = "Drupal\virtual_entities\VirtualEntityTypeForm",
+ *       "add" = "Drupal\virtual_entities\Form\VirtualEntityTypeForm",
+ *       "edit" = "Drupal\virtual_entities\Form\VirtualEntityTypeForm",
  *       "delete" = "Drupal\virtual_entities\Form\VirtualEntityTypeDeleteConfirm"
  *     },
- *     "list_builder" = "Drupal\virtual_entities\VirtualEntityTypeListBuilder",
+ *     "list_builder" = "Drupal\virtual_entities\Entity\VirtualEntityTypeListBuilder",
  *   },
  *   admin_permission = "administer virtual entity types",
  *   config_prefix = "type",
