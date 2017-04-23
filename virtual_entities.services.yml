@@ -2,3 +2,8 @@ services:
   entity.virtual_entities.routes:
       class: Drupal\virtual_entities\Routing\RoutesVirtualEntity
       arguments: ['@entity.manager']
+  entity.query.virtual:
+    class: Drupal\virtual_entities\Entity\Query\VirtualEntityQueryFactory
+    arguments: ['@http_client', '@entity.manager']
+    tags:
+      - { name: backend_overridable }

@@ -74,7 +74,7 @@ class VirtualEntityStorage extends ContentEntityStorageBase {
    * {@inheritdoc}
    */
   protected function getQueryServiceName() {
-    // TODO: Implement getQueryServiceName() method.
+    return 'entity.query.virtual';
   }
 
   /**
