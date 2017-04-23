@@ -31,7 +31,7 @@ class Condition extends ConditionBase {
    */
   public function compile($query) {
     foreach ($this->conditions as $condition) {
-      if ($condition['field'] instanceOf ConditionInterface) {
+      if ($condition['field'] instanceof ConditionInterface) {
         $query_condition = new static('AND', $this->query);
         $query_condition->compile($query);
       }

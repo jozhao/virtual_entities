@@ -25,10 +25,15 @@ class Query extends QueryBase implements QueryInterface {
    * Query constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
-   * @param string                                  $conjunction
-   * @param array                                   $namespaces
+   *   Virtual entity type.
+   * @param string $conjunction
+   *   Query condition.
+   * @param \GuzzleHttp\ClientInterface $http_client
+   *   GuzzleHttp client.
+   * @param array $namespaces
+   *   Current entity namespace.
    */
-  public function __construct(\Drupal\Core\Entity\EntityTypeInterface $entity_type, $conjunction, ClientInterface $http_client, array $namespaces) {
+  public function __construct(EntityTypeInterface $entity_type, $conjunction, ClientInterface $http_client, array $namespaces) {
     parent::__construct($entity_type, $conjunction, $namespaces);
 
     $this->httpClient = $http_client;
