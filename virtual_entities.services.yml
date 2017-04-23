@@ -3,7 +3,7 @@ services:
       class: Drupal\virtual_entities\Routing\RoutesVirtualEntity
       arguments: ['@entity.manager']
   entity.query.virtual:
-    class: Drupal\virtual_entities\Entity\Query\VirtualEntityQueryFactory
+    class: Drupal\virtual_entities\Entity\Query\QueryFactory
     arguments: ['@http_client', '@entity.manager']
     tags:
       - { name: backend_overridable }
