@@ -32,6 +32,7 @@ class QueryFactory implements QueryFactoryInterface {
    * QueryFactory constructor.
    *
    * @param \GuzzleHttp\ClientInterface $http_client
+   *   GuzzleHttp client.
    */
   public function __construct(ClientInterface $http_client) {
     $this->namespaces = QueryBase::getNamespaces($this);
