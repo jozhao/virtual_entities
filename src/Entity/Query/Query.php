@@ -124,9 +124,25 @@ class Query extends QueryBase implements QueryInterface {
    * @see \Drupal\virtual_entities\Plugin\VirtualEntity\StorageClient\Restful
    */
   protected function result() {
-    $query_results = $this->getStorageClient()->query($this->httpClientParameters);
+    if ($this->count) {
+      return count($this->getStorageClient()->query($this->httpClientParameters));
+    }
 
-    return $query_results;
+    // Fetch entities ids.
+    $query_results = $this->getStorageClient()->query($this->httpClientParameters);
+    $result = [];
+    $bundle_id = 'resource';
+    $bundle_entity_type = $this->entityType->getBundleEntityType();
+    $bundle = \Drupal::entityTypeManager()->getStorage($bundle_entity_type)->load($bundle_id);
+
+    foreach ($query_results as $query_result) {
+      if (FALSE === $bundle->getFieldMapping('id')) {
+        continue;
+      }
+      $id = $bundle_id . '-' . $query_result->{$bundle->getFieldMapping('id')};
+      $result[$id] = $id;
+    }
+    return $result;
   }
 
   /**

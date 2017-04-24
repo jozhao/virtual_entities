@@ -19,3 +19,12 @@ virtual_entities.type.*:
     endpoint:
       type: string
       label: 'Endpoint'
+    field_mappings:
+      type: sequence
+      label: 'Field mappings'
+      sequence:
+        type: string
+        label: 'Field mapping'
+    format:
+      type: string
+      label: 'Format'
