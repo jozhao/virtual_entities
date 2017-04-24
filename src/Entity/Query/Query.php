@@ -113,6 +113,8 @@ class Query extends QueryBase implements QueryInterface {
    *
    * @return int|array
    *   Returns the query result as entity IDs.
+   *
+   * @see \Drupal\virtual_entities\Plugin\VirtualEntity\StorageClient\Restful
    */
   protected function result() {
     $query_results = $this->getStorageClient()->query();
