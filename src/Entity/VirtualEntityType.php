@@ -128,8 +128,15 @@ class VirtualEntityType extends ConfigEntityBundleBase implements VirtualEntityT
   /**
    * {@inheritdoc}
    */
-  public function getEndpoint() {
+  public function getEndPoint() {
     return $this->endpoint;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormat() {
+    return $this->format;
   }
 
   /**

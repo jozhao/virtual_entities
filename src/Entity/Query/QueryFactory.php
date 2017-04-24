@@ -5,6 +5,7 @@ namespace Drupal\virtual_entities\Entity\Query;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Query\QueryBase;
 use Drupal\Core\Entity\Query\QueryFactoryInterface;
+use Drupal\Component\Plugin\PluginManagerInterface;
 use GuzzleHttp\ClientInterface;
 
 /**
@@ -29,13 +30,23 @@ class QueryFactory implements QueryFactoryInterface {
   protected $httpClient;
 
   /**
+   * The storage client manager.
+   *
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
+   */
+  protected $storageClientManager;
+
+  /**
    * QueryFactory constructor.
    *
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $storage_client_manager
+   *   Plugin manager instance.
    * @param \GuzzleHttp\ClientInterface $http_client
    *   GuzzleHttp client.
    */
-  public function __construct(ClientInterface $http_client) {
+  public function __construct(PluginManagerInterface $storage_client_manager, ClientInterface $http_client) {
     $this->namespaces = QueryBase::getNamespaces($this);
+    $this->storageClientManager = $storage_client_manager;
     $this->httpClient = $http_client;
   }
 
@@ -45,7 +56,7 @@ class QueryFactory implements QueryFactoryInterface {
   public function get(EntityTypeInterface $entity_type, $conjunction) {
     $class = QueryBase::getClass($this->namespaces, 'Query');
 
-    return new $class($entity_type, $conjunction, $this->httpClient, $this->namespaces);
+    return new $class($entity_type, $conjunction, $this->storageClientManager, $this->httpClient, $this->namespaces);
   }
 
   /**

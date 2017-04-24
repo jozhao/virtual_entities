@@ -1,9 +1,12 @@
 services:
+  plugin.manager.virtual_entity_storage_client:
+    class: Drupal\virtual_entities\StorageClientPluginManager
+    parent: default_plugin_manager
   entity.virtual_entities.routes:
       class: Drupal\virtual_entities\Routing\RoutesVirtualEntity
       arguments: ['@entity.manager']
   entity.query.virtual:
     class: Drupal\virtual_entities\Entity\Query\QueryFactory
-    arguments: ['@http_client', '@entity.manager']
+    arguments: ['@plugin.manager.virtual_entity_storage_client', '@http_client', '@entity.manager']
     tags:
       - { name: backend_overridable }
