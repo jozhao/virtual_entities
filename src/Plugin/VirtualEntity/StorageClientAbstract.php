@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\virtual_entities\StorageClient;
+namespace Drupal\virtual_entities\Plugin\VirtualEntity;
 
 use Drupal\Component\Plugin\PluginBase;
 
@@ -24,7 +24,13 @@ abstract class StorageClientAbstract extends PluginBase implements StorageClient
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    $this->httpClient = $this->configuration['http_client'];
+    // Set default guzzle http client.
+    if (isset($this->configuration['http_client'])) {
+      $this->httpClient = $this->configuration['http_client'];
+    }
+    else {
+      $this->httpClient = \Drupal::httpClient();
+    }
   }
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\virtual_entities\StorageClient;
+namespace Drupal\virtual_entities\Plugin\VirtualEntity;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\virtual_entities\VirtualEntityInterface;

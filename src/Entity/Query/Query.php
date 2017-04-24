@@ -132,7 +132,7 @@ class Query extends QueryBase implements QueryInterface {
       // Load bundle instance object.
       $bundle = \Drupal::entityTypeManager()->getStorage($bundle_entity_type)->load('resource');
       // Set storage client plugin configuration.
-      $plugin_id = 'storage_client_restful';
+      $plugin_id = 'virtual_entity_client_restful';
       $plugin_configuration = [
         'endpoint' => $bundle->getEndPoint(),
         'format' => $bundle->getFormat(),

@@ -56,8 +56,8 @@ class VirtualEntityTypeForm extends BundleEntityFormBase {
     }
 
     // Remove the not used fields.
-    unset($fields[$this->entityManager->getDefinition('external_entity')->getKey('uuid')]);
-    unset($fields[$this->entityManager->getDefinition('external_entity')->getKey('bundle')]);
+    unset($fields[$this->entityManager->getDefinition('virtual_entity')->getKey('uuid')]);
+    unset($fields[$this->entityManager->getDefinition('virtual_entity')->getKey('bundle')]);
 
     $form['label'] = [
       '#title' => t('Name'),

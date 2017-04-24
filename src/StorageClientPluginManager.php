@@ -18,21 +18,21 @@ class StorageClientPluginManager extends DefaultPluginManager {
    *
    * @var string|bool
    */
-  protected $pluginDir = 'Plugin/VirtualEntityStorageClient';
+  protected $pluginDir = 'Plugin/VirtualEntity/StorageClient';
 
   /**
    * Plugin interface class.
    *
    * @var string
    */
-  protected $pluginInterface = 'Drupal\virtual_entities\StorageClient\StorageClientInterface';
+  protected $pluginInterface = 'Drupal\virtual_entities\Plugin\VirtualEntity\StorageClientInterface';
 
   /**
    * Plugin annotation class.
    *
    * @var string
    */
-  protected $pluginDefinitionAnnotationName = '';
+  protected $pluginDefinitionAnnotationName = 'Drupal\virtual_entities\Annotation\StorageClient';
 
   /**
    * Plugin annotation class namespace.
