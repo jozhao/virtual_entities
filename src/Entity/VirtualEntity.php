@@ -16,8 +16,8 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   label = @Translation("Virtual entity"),
  *   bundle_label = @Translation("Virtual entity type"),
  *   handlers = {
- *     "storage" = "Drupal\virtual_entities\Storage\VirtualEntityStorage",
- *     "storage_schema" = "Drupal\virtual_entities\Storage\VirtualEntityStorageSchema",
+ *     "storage" = "Drupal\virtual_entities\Entity\VirtualEntityStorage",
+ *     "storage_schema" = "Drupal\virtual_entities\Entity\VirtualEntityStorageSchema",
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
  *     "access" = "Drupal\virtual_entities\VirtualEntityAccessControlHandler",
  *     "form" = {

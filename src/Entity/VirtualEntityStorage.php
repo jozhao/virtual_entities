@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\virtual_entities\Storage;
+namespace Drupal\virtual_entities\Entity;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\ContentEntityStorageBase;
