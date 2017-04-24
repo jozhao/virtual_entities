@@ -23,6 +23,13 @@ class Query extends QueryBase implements QueryInterface {
   protected $httpClient;
 
   /**
+   * The HTTP client parameters.
+   *
+   * @var array
+   */
+  protected $httpClientParameters = [];
+
+  /**
    * The storage client manager.
    *
    * @var \Drupal\Component\Plugin\PluginManagerInterface
@@ -32,7 +39,7 @@ class Query extends QueryBase implements QueryInterface {
   /**
    * The storage client.
    *
-   * @var \Drupal\virtual_entities\StorageClient\StorageClientInterface
+   * @var \Drupal\virtual_entities\Plugin\VirtualEntity\StorageClientInterface
    */
   protected $storageClient;
 
@@ -117,7 +124,7 @@ class Query extends QueryBase implements QueryInterface {
    * @see \Drupal\virtual_entities\Plugin\VirtualEntity\StorageClient\Restful
    */
   protected function result() {
-    $query_results = $this->getStorageClient()->query();
+    $query_results = $this->getStorageClient()->query($this->httpClientParameters);
 
     return $query_results;
   }
