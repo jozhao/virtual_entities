@@ -142,6 +142,7 @@ class Query extends QueryBase implements QueryInterface {
       $id = $bundle_id . '-' . $query_result->{$bundle->getFieldMapping('id')};
       $result[$id] = $id;
     }
+
     return $result;
   }
 
