@@ -155,9 +155,8 @@ class VirtualEntityTypeForm extends BundleEntityFormBase {
       $form_state->setErrorByName('type', $this->t("Invalid machine-readable name. Enter a name other than %invalid.", ['%invalid' => $id]));
     }
 
-    xdebug_var_dump($form_state->getValue('field_mappings'));
+    // Set custom settings.
     $form_state->setValue('field_mappings', array_filter($form_state->getValue('field_mappings')));
-
     $form_state->unsetValue('field_mappings');
   }
 
