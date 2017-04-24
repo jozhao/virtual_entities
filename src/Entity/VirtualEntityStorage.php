@@ -60,7 +60,7 @@ class VirtualEntityStorage extends ContentEntityStorageBase {
    * {@inheritdoc}
    */
   protected function doLoadMultiple(array $ids = NULL) {
-    $entities = array();
+    $entities = [];
 
     foreach ($ids as $id) {
       if (strpos($id, '-')) {
