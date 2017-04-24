@@ -135,4 +135,84 @@ class VirtualEntity extends ContentEntityBase implements VirtualEntityInterface 
     return $fields;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getMappedObject() {
+    $bundle = $this->entityManager()->getStorage('virtual_entity_type')->load($this->bundle());
+    $object = new \stdClass();
+    foreach ($bundle->getFieldMappings() as $source => $destination) {
+      $field_definition = $this->getFieldDefinition($source);
+      $settings = $field_definition->getSettings();
+      $property = $field_definition->getFieldStorageDefinition()->getMainPropertyName();
+
+      $offset = 0;
+      // Special case for references to external entities.
+      if (isset($settings['target_type']) && $settings['target_type'] === 'virtual_entity') {
+        // Only 1 bundle is allowed.
+        $target_bundle = reset($settings['handler_settings']['target_bundles']);
+        $offset = strlen($target_bundle) + 1;
+      }
+      // If the field has many item we proccess each one.
+      if ($this->get($source)->count() > 1) {
+        $values = $this->get($source)->getValue();
+        $object->{$destination} = [];
+        foreach ($values as $value_row) {
+          $object->{$destination}[] = substr($value_row[$property], $offset);
+        }
+      }
+      else {
+        $object->{$destination} = substr($this->get($source)->{$property}, $offset);
+      }
+    }
+    return $object;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function mapObject(\stdClass $obj) {
+    // Don't touch the original object.
+    $object = clone $obj;
+    $bundle = $this->entityManager()->getStorage('virtual_entity_type')->load($this->bundle());
+
+    foreach ($bundle->getFieldMappings() as $destination => $source) {
+      $field_definition = $this->getFieldDefinition($destination);
+      // When there is no definition go to the next item.
+      if (!$field_definition) {
+        continue;
+      }
+      $settings = $field_definition->getSettings();
+      $property = $field_definition->getFieldStorageDefinition()->getMainPropertyName();
+
+      $value_prefix = '';
+      // Special case for references to external entities.
+      if (isset($settings['target_type']) && $settings['target_type'] === 'virtual_entity') {
+        // Only 1 bundle is allowed.
+        $target_bundle = reset($settings['handler_settings']['target_bundles']);
+        $value_prefix = $target_bundle . '-';
+      }
+      // Array of value for the entity.
+      $destination_value = [];
+      // Set at least an empty string for the destination.
+      $object->{$source} = isset($object->{$source}) ? $object->{$source} : '';
+      // Convert to array.
+      if (!is_array($object->{$source})) {
+        $object->{$source} = [$object->{$source}];
+      }
+      foreach ($object->{$source} as $value) {
+        // For array cases we assume the property keys arrive from the client
+        // correctly.
+        if (is_array($value)) {
+          $destination_value[] = $value;
+        }
+        else {
+          $destination_value[] = [$property => $value_prefix . $value];
+        }
+      }
+      $this->set($destination, $destination_value);
+    }
+    return $this;
+  }
+
 }

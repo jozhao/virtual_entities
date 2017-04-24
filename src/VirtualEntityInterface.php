@@ -26,4 +26,19 @@ interface VirtualEntityInterface extends ContentEntityInterface {
    */
   public function virtualId();
 
+  /**
+   * Map this entity to a \stdClass object.
+   *
+   * @return \stdClass
+   *   The mapped object.
+   */
+  public function getMappedObject();
+
+  /**
+   * Map a \stdClass object to this entity.
+   *
+   * @return $this
+   */
+  public function mapObject(\stdClass $object);
+
 }

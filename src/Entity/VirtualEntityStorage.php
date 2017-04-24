@@ -60,7 +60,18 @@ class VirtualEntityStorage extends ContentEntityStorageBase {
    * {@inheritdoc}
    */
   protected function doLoadMultiple(array $ids = NULL) {
-    // TODO: Implement doLoadMultiple() method.
+    $entities = array();
+
+    foreach ($ids as $id) {
+      if (strpos($id, '-')) {
+        list($bundle, $virtualId) = explode('-', $id);
+        if ($virtualId) {
+          $entities[$id] = $this->create([$this->entityType->getKey('bundle') => $bundle])->mapObject($this->getStorageClient($bundle)->load($virtualId))->enforceIsNew(FALSE);
+        }
+      }
+    }
+
+    return $entities;
   }
 
   /**
