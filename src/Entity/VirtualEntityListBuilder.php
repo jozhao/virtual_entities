@@ -35,6 +35,18 @@ class VirtualEntityListBuilder extends EntityListBuilder {
   /**
    * {@inheritdoc}
    */
+  public function buildRow(EntityInterface $entity) {
+    $row['title'] = [
+      'data' => $entity->label(),
+      'class' => ['menu-label'],
+    ];
+
+    return $row + parent::buildRow($entity);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getDefaultOperations(EntityInterface $entity) {
     $operations = parent::getDefaultOperations($entity);
     // Place the edit operation after the operations added by field_ui.module
