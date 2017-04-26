@@ -16,16 +16,26 @@ use Drupal\virtual_entities\VirtualEntityInterface;
 class Restful extends StorageClientBase {
 
   /**
+   * Results.
+   *
+   * @var mixed
+   */
+  private static $results;
+
+  /**
    * {@inheritdoc}
    */
   public function load($id) {
-    $items = $this->query();
+    if (NULL == self::$results) {
+      self::$results = $this->query();
+    }
+
+    $items = self::$results;
+
     foreach ($items as $item) {
       if ($item->title == $id) {
         return (object) $item;
       }
-
-      break;
     }
   }
 
