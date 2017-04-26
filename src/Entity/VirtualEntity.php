@@ -153,7 +153,7 @@ class VirtualEntity extends ContentEntityBase implements VirtualEntityInterface 
         $target_bundle = reset($settings['handler_settings']['target_bundles']);
         $offset = strlen($target_bundle) + 1;
       }
-      // If the field has many item we proccess each one.
+      // If the field has many item we process each one.
       if ($this->get($source)->count() > 1) {
         $values = $this->get($source)->getValue();
         $object->{$destination} = [];

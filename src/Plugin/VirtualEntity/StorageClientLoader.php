@@ -20,10 +20,24 @@ class StorageClientLoader {
 
   protected $storageClients = [];
 
-  public function __construct(PluginManagerInterface $storage_client_manager, $bundle = '') {
+  /**
+   * StorageClientLoader constructor.
+   *
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $storage_client_manager
+   *   Client manager class.
+   * @param string $bundle_id
+   *   Bundle id.
+   */
+  public function __construct(PluginManagerInterface $storage_client_manager, $bundle_id = '') {
     $this->storageClientManager = $storage_client_manager;
   }
 
+  /**
+   * Add Storage client.
+   *
+   * @param string $bundle_id
+   *   Bundle id.
+   */
   public function addStorageClient($bundle_id) {
     // Get bundle settings.
     $bundle = \Drupal::entityTypeManager()->getStorage('virtual_entity_type')->load($bundle_id);
@@ -39,6 +53,19 @@ class StorageClientLoader {
       $plugin_id,
       $plugin_configuration
     );
+  }
+
+  /**
+   * Get Storage client.
+   *
+   * @param string $build_id
+   *   Bundle id.
+   *
+   * @return mixed
+   *   Storage client instance.
+   */
+  public function getStorageClient($build_id) {
+    return $this->storageClients[$build_id];
   }
 
 }
