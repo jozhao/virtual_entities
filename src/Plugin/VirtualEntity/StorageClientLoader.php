@@ -18,7 +18,12 @@ class StorageClientLoader {
    */
   protected $storageClientManager;
 
-  protected $storageClients = [];
+  /**
+   * The storage clients array.
+   *
+   * @var array
+   */
+  private static $storageClients = [];
 
   /**
    * StorageClientLoader constructor.
@@ -40,7 +45,9 @@ class StorageClientLoader {
    */
   public function addStorageClient($bundle_id) {
     // Get bundle settings.
-    $bundle = \Drupal::entityTypeManager()->getStorage('virtual_entity_type')->load($bundle_id);
+    $bundle = \Drupal::entityTypeManager()
+      ->getStorage('virtual_entity_type')
+      ->load($bundle_id);
     // Set storage client plugin configuration.
     $plugin_id = 'virtual_entity_client_restful';
     $plugin_configuration = [
@@ -49,7 +56,7 @@ class StorageClientLoader {
     ];
 
     // Save bundle storage client class.
-    $this->storageClients[$bundle_id] = $this->storageClientManager->createInstance(
+    self::$storageClients[$bundle_id] = $this->storageClientManager->createInstance(
       $plugin_id,
       $plugin_configuration
     );
@@ -65,7 +72,11 @@ class StorageClientLoader {
    *   Storage client instance.
    */
   public function getStorageClient($build_id) {
-    return $this->storageClients[$build_id];
+    if (!isset(self::$storageClients[$build_id])) {
+      $this->addStorageClient($build_id);
+    }
+
+    return self::$storageClients[$build_id];
   }
 
 }

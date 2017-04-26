@@ -5,7 +5,14 @@ namespace Drupal\virtual_entities\Entity;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\ContentEntityStorageBase;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\virtual_entities\Plugin\VirtualEntity\StorageClientLoader;
+use GuzzleHttp\ClientInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class VirtualEntityStorage.
@@ -13,6 +20,36 @@ use Drupal\Core\Field\FieldDefinitionInterface;
  * @package Drupal\virtual_entities\Storage
  */
 class VirtualEntityStorage extends ContentEntityStorageBase {
+
+  /**
+   * The storage client manager.
+   *
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
+   */
+  protected $storageClientManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(EntityTypeInterface $entity_type, EntityManagerInterface $entity_manager, CacheBackendInterface $cache, PluginManagerInterface $storage_client_manager, ClientInterface $http_client) {
+    parent::__construct($entity_type, $entity_manager, $cache);
+
+    $this->storageClientManager = $storage_client_manager;
+    $this->httpClient = $http_client;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
+    return new static(
+      $entity_type,
+      $container->get('entity.manager'),
+      $container->get('cache.entity'),
+      $container->get('plugin.manager.virtual_entity_storage_client'),
+      $container->get('http_client')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -66,7 +103,11 @@ class VirtualEntityStorage extends ContentEntityStorageBase {
       if (strpos($id, '-')) {
         list($bundle, $virtualId) = explode('-', $id);
         if ($virtualId) {
-          $entities[$id] = $this->create([$this->entityType->getKey('bundle') => $bundle])->mapObject($this->getStorageClient($bundle)->load($virtualId))->enforceIsNew(FALSE);
+          $clientLoader = new StorageClientLoader($this->storageClientManager);
+          $virtualEntity = $clientLoader->getStorageClient($bundle)->load($virtualId);
+          if ($virtualEntity) {
+            $entities[$id] = $this->create([$this->entityType->getKey('bundle') => $bundle])->mapObject($virtualEntity)->enforceIsNew(FALSE);
+          }
         }
       }
     }

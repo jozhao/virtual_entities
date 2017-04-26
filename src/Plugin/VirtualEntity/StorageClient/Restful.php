@@ -19,7 +19,14 @@ class Restful extends StorageClientBase {
    * {@inheritdoc}
    */
   public function load($id) {
-    // TODO: Implement load() method.
+    $items = $this->query();
+    foreach ($items as $item) {
+      if ($item->title == $id) {
+        return (object) $item;
+      }
+
+      break;
+    }
   }
 
   /**

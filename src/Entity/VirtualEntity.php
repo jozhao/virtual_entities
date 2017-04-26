@@ -19,7 +19,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "storage" = "Drupal\virtual_entities\Entity\VirtualEntityStorage",
  *     "storage_schema" = "Drupal\virtual_entities\Entity\VirtualEntityStorageSchema",
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
- *     "access" = "Drupal\virtual_entities\VirtualEntityAccessControlHandler",
+ *     "access" = "Drupal\virtual_entities\Access\VirtualEntityAccessControlHandler",
  *     "form" = {
  *       "default" = "Drupal\virtual_entities\VirtualEntityForm",
  *       "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm",
