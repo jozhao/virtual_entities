@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\virtual_entities;
+namespace Drupal\virtual_entities\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 

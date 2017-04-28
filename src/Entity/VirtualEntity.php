@@ -3,7 +3,6 @@
 namespace Drupal\virtual_entities\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
-use Drupal\virtual_entities\VirtualEntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;

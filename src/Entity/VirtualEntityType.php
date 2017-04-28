@@ -3,7 +3,6 @@
 namespace Drupal\virtual_entities\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
-use Drupal\virtual_entities\VirtualEntityTypeInterface;
 
 /**
  * Defines the Virtual Entity type configuration entity.
