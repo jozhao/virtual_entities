@@ -23,7 +23,7 @@ class VirtualEntityRouteProvider implements EntityRouteProviderInterface {
         '_controller' => '\Drupal\node\Controller\NodeViewController::view',
         '_title_callback' => '\Drupal\node\Controller\NodeViewController::title',
       ])
-      ->setRequirement('virtual_entity', '\d+')
+      ->setRequirement('virtual_entity', '[A-Za-z0-9\-]+')
       ->setRequirement('_entity_access', 'virtual_entity.view');
     $route_collection->add('entity.virtual_entity.canonical', $route);
 
@@ -32,7 +32,7 @@ class VirtualEntityRouteProvider implements EntityRouteProviderInterface {
         '_entity_form' => 'virtual_entity.delete',
         '_title' => 'Delete',
       ])
-      ->setRequirement('virtual_entity', '\d+')
+      ->setRequirement('virtual_entity', '[A-Za-z0-9\-]+')
       ->setRequirement('_entity_access', 'virtual_entity.delete')
       ->setOption('_virtual_entity_operation_route', TRUE);
     $route_collection->add('entity.virtual_entity.delete_form', $route);
@@ -40,7 +40,7 @@ class VirtualEntityRouteProvider implements EntityRouteProviderInterface {
     $route = (new Route('/virtual-entity/{virtual_entity}/edit'))
       ->setDefault('_entity_form', 'virtual_entity.edit')
       ->setRequirement('_entity_access', 'virtual_entity.update')
-      ->setRequirement('virtual_entity', '\d+')
+      ->setRequirement('virtual_entity', '[A-Za-z0-9\-]+')
       ->setOption('_virtual_entity_operation_route', TRUE);
     $route_collection->add('entity.virtual_entity.edit_form', $route);
 

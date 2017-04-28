@@ -54,7 +54,7 @@ class VirtualEntity extends ContentEntityBase implements VirtualEntityInterface 
    * {@inheritdoc}
    */
   public function virtualId() {
-    return parent::id();
+    return md5(parent::id());
   }
 
   /**

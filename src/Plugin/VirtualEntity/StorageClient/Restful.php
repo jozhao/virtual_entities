@@ -33,7 +33,7 @@ class Restful extends StorageClientBase {
     $items = self::$results;
 
     foreach ($items as $item) {
-      if ($item->title == $id) {
+      if (md5($item->title) == $id) {
         return (object) $item;
       }
     }

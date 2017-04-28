@@ -146,7 +146,8 @@ class Query extends QueryBase implements QueryInterface {
       if (FALSE === $bundle->getFieldMapping('id')) {
         continue;
       }
-      $id = $bundle_id . '-' . $query_result->{$bundle->getFieldMapping('id')};
+      $hashed_id = md5($query_result->{$bundle->getFieldMapping('id')});
+      $id = $bundle_id . '-' . $hashed_id;
       $result[$id] = $id;
     }
 

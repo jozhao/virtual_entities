@@ -37,7 +37,7 @@ class VirtualEntityListBuilder extends EntityListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     $row['title'] = [
-      'data' => $entity->label(),
+      'data' => ['#markup' => "<a href=" . $entity->url() . ">" . $entity->label() . "</a>"],
       'class' => ['menu-label'],
     ];
 
