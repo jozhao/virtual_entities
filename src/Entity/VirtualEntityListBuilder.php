@@ -41,6 +41,8 @@ class VirtualEntityListBuilder extends EntityListBuilder {
       'class' => ['menu-label'],
     ];
 
+    $row['bundle']['data'] = ['#markup' => $entity->getType()];
+
     return $row + parent::buildRow($entity);
   }
 
