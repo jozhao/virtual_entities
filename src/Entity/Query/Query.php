@@ -16,6 +16,13 @@ use GuzzleHttp\ClientInterface;
 class Query extends QueryBase implements QueryInterface {
 
   /**
+   * The parameters to send to entity storage client.
+   *
+   * @var array
+   */
+  protected $parameters = [];
+
+  /**
    * The HTTP client to fetch the data with.
    *
    * @var \GuzzleHttp\ClientInterface
@@ -171,6 +178,16 @@ class Query extends QueryBase implements QueryInterface {
     }
 
     return $this->storageClient;
+  }
+
+  /**
+   * Set a parameter.
+   */
+  public function setParameter($key, $value) {
+    if ($key == $this->entityType->getKey('bundle')) {
+      return FALSE;
+    }
+    $this->parameters[$key] = is_array($value) ? implode($value, ',') : $value;
   }
 
 }
