@@ -20,8 +20,8 @@ class VirtualEntityRouteProvider implements EntityRouteProviderInterface {
 
     $route = (new Route('/virtual-entity/{virtual_entity}'))
       ->addDefaults([
-        '_controller' => '\Drupal\node\Controller\NodeViewController::view',
-        '_title_callback' => '\Drupal\node\Controller\NodeViewController::title',
+        '_entity_view' => 'virtual_entity.full',
+        '_title_callback' => 'View virtual entity',
       ])
       ->setRequirement('virtual_entity', '[A-Za-z0-9\-]+')
       ->setRequirement('_entity_access', 'virtual_entity.view');
