@@ -13,6 +13,13 @@ use Drupal\Core\Field\BaseFieldDefinition;
  * @ContentEntityType(
  *   id = "virtual_entity",
  *   label = @Translation("Virtual entity"),
+ *   label_collection = @Translation("Virtual entity"),
+ *   label_singular = @Translation("Virtual entity"),
+ *   label_plural = @Translation("Virtual entities"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count virtual entity",
+ *     plural = "@count virtual entities"
+ *   ),
  *   bundle_label = @Translation("Virtual entity type"),
  *   handlers = {
  *     "storage" = "Drupal\virtual_entities\Entity\VirtualEntityStorage",
@@ -43,8 +50,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   links = {
  *     "canonical" = "/virtual-entity/{virtual_entity}",
  *     "delete-form" = "/virtual-entity/{virtual_entity}/delete",
- *     "edit-form" = "/virtual-entity/{virtual_entity}/edit",
- *     "collection" = "/virtual-entity",
+ *     "edit-form" = "/virtual-entity/{virtual_entity}/edit"
  *   }
  * )
  */
