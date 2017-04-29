@@ -18,7 +18,9 @@ class VirtualEntityAccessControlHandler extends EntityAccessControlHandler {
    * {@inheritdoc}
    */
   public function access(EntityInterface $entity, $operation, AccountInterface $account = NULL, $return_as_object = FALSE) {
+    $account = $this->prepareUser($account);
     $result = parent::access($entity, $operation, $account, TRUE);
+
     if ($result->isForbidden()) {
       return $return_as_object ? $result : $result->isAllowed();
     }
