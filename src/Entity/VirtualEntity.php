@@ -32,7 +32,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *       "edit" = "Drupal\virtual_entities\VirtualEntityForm"
  *     },
  *     "route_provider" = {
- *       "html" = "Drupal\virtual_entities\Entity\VirtualEntityRouteProvider",
+ *       "html" = "Drupal\virtual_entities\Routing\VirtualEntityRouteProvider",
  *     },
  *     "list_builder" = "Drupal\virtual_entities\Entity\VirtualEntityListBuilder",
  *   },
