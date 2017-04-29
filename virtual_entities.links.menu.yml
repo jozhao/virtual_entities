@@ -1,10 +1,10 @@
 entity.virtual_entity_type.collection:
   title: 'Virtual entity types'
-  parent: system.admin_structure
   description: 'Manage virtual entity types.'
   route_name: entity.virtual_entity_type.collection
+  parent: system.admin_structure
 entity.virtual_entity.collection:
   title: 'Virtual entities'
-  parent: system.admin_content
   description: 'Virtual entities overview.'
   route_name: entity.virtual_entity.collection
+  parent: system.admin_content

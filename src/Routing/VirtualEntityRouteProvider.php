@@ -20,7 +20,7 @@ class VirtualEntityRouteProvider implements EntityRouteProviderInterface {
 
     $route = (new Route('/virtual-entity/{virtual_entity}'))
       ->addDefaults([
-        '_entity_view' => 'virtual_entity.full',
+        '_entity_view' => 'virtual_entity',
         '_title_callback' => 'View virtual entity',
       ])
       ->setRequirement('virtual_entity', '[A-Za-z0-9\-]+')
