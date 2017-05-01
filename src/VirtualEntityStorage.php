@@ -116,7 +116,7 @@ class VirtualEntityStorage extends ContentEntityStorageBase {
 
     foreach ($ids as $id) {
       if (strpos($id, '-')) {
-        list($bundle, $virtualId) = explode('-', $id);
+        list($bundle, $virtualId) = explode('-', $id, 2);
         if ($virtualId) {
           $clientLoader = new VirtualEntityStorageClientLoader($this->storageClientManager);
           $virtualEntity = $clientLoader->getStorageClient($bundle)->load($virtualId);
