@@ -44,10 +44,11 @@ class VirtualEntityStorage extends ContentEntityStorageBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityManagerInterface $entity_manager, CacheBackendInterface $cache, PluginManagerInterface $storage_client_manager, ClientInterface $http_client) {
+  public function __construct(EntityTypeInterface $entity_type, EntityManagerInterface $entity_manager, CacheBackendInterface $cache, PluginManagerInterface $storage_client_manager, VirtualEntityDecoderServiceInterface $decoder, ClientInterface $http_client) {
     parent::__construct($entity_type, $entity_manager, $cache);
 
     $this->storageClientManager = $storage_client_manager;
+    $this->decoder = $decoder;
     $this->httpClient = $http_client;
   }
 
@@ -60,6 +61,7 @@ class VirtualEntityStorage extends ContentEntityStorageBase {
       $container->get('entity.manager'),
       $container->get('cache.entity'),
       $container->get('plugin.manager.virtual_entity.storage_client.plugin.processor'),
+      $container->get('virtual_entity.storage_client.decoder'),
       $container->get('http_client')
     );
   }
