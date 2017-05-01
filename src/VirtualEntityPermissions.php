@@ -2,7 +2,6 @@
 
 namespace Drupal\virtual_entities;
 
-use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\virtual_entities\Entity\VirtualEntityType;
 
@@ -12,7 +11,6 @@ use Drupal\virtual_entities\Entity\VirtualEntityType;
 class VirtualEntityPermissions {
 
   use StringTranslationTrait;
-  use UrlGeneratorTrait;
 
   /**
    * Returns an array of virtual entity type permissions.

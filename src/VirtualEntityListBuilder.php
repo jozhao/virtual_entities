@@ -1,17 +1,20 @@
 <?php
 
-namespace Drupal\virtual_entities\Entity;
+namespace Drupal\virtual_entities;
 
-use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityListBuilder;
+use Drupal\Core\Routing\LinkGeneratorTrait;
 use Drupal\Core\Url;
 
 /**
- * Class VirtualEntityListBuilder.
+ * Defines a class to build a listing of Virtual entity entities.
  *
- * @package Drupal\virtual_entities
+ * @ingroup virtual_entities
  */
 class VirtualEntityListBuilder extends EntityListBuilder {
+
+  use LinkGeneratorTrait;
 
   /**
    * {@inheritdoc}
@@ -26,7 +29,8 @@ class VirtualEntityListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header['title'] = t('Title');
+    $header['id'] = $this->t('Virtual entity ID');
+    $header['name'] = $this->t('Name');
     $header['type'] = t('Type');
 
     return $header + parent::buildHeader();
@@ -36,11 +40,16 @@ class VirtualEntityListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    $row['title'] = [
-      'data' => ['#markup' => "<a href=" . $entity->url() . ">" . $entity->label() . "</a>"],
-      'class' => ['menu-label'],
-    ];
-
+    /* @var $entity \Drupal\virtual_entities\Entity\VirtualEntity */
+    $row['id'] = $entity->id();
+    $row['name'] = $this->l(
+      $entity->label(),
+      new Url(
+        'entity.virtual_entity.edit_form', [
+          'virtual_entity' => $entity->id(),
+        ]
+      )
+    );
     $row['bundle']['data'] = ['#markup' => $entity->getType()];
 
     return $row + parent::buildRow($entity);
@@ -58,20 +67,6 @@ class VirtualEntityListBuilder extends EntityListBuilder {
     }
 
     return $operations;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function render() {
-    $build = parent::render();
-
-    // Display empty information.
-    $build['table']['#empty'] = $this->t('No virtual entity available. <a href=":link">Start by adding virtual entity type</a>.', [
-      ':link' => Url::fromRoute('virtual_entity.type_add')->toString(),
-    ]);
-
-    return $build;
   }
 
 }

@@ -1,25 +1,21 @@
-entity.virtual_entity_type.edit_form:
-  route_name: entity.virtual_entity_type.edit_form
-  base_route: entity.virtual_entity_type.edit_form
-  title: 'Edit'
-entity.virtual_entity_type.collection:
-  route_name: entity.virtual_entity_type.collection
-  base_route: entity.virtual_entity_type.collection
-  title: 'List'
+# Virtual entity routing definition
 entity.virtual_entity.collection:
   route_name: entity.virtual_entity.collection
   base_route: system.admin_content
   title: 'Virtual entities'
+
 entity.virtual_entity.canonical:
   route_name: entity.virtual_entity.canonical
   base_route: entity.virtual_entity.canonical
   title: 'View'
+
 entity.virtual_entity.edit_form:
   route_name: entity.virtual_entity.edit_form
   base_route: entity.virtual_entity.canonical
   title: Edit
+
 entity.virtual_entity.delete_form:
-  route_name: entity.virtual_entity.delete_form
-  base_route: entity.virtual_entity.canonical
+  route_name:  entity.virtual_entity.delete_form
+  base_route:  entity.virtual_entity.canonical
   title: Delete
   weight: 10

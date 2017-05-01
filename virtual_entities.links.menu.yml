@@ -1,10 +1,15 @@
-entity.virtual_entity_type.collection:
-  title: 'Virtual entity types'
-  description: 'Manage virtual entity types.'
-  route_name: entity.virtual_entity_type.collection
-  parent: system.admin_structure
+# Virtual entity menu items definition
 entity.virtual_entity.collection:
   title: 'Virtual entities'
-  description: 'Virtual entities overview.'
   route_name: entity.virtual_entity.collection
+  description: 'List Virtual entity entities'
   parent: system.admin_content
+  weight: 100
+
+# Virtual entity type menu items definition
+entity.virtual_entity_type.collection:
+  title: 'Virtual entity type'
+  route_name: entity.virtual_entity_type.collection
+  description: 'List Virtual entity type (bundles)'
+  parent: system.admin_structure
+  weight: 99

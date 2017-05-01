@@ -1,9 +1,7 @@
 name: Virtual Entities
-description: Provides the 'Virtual Entities'.
-package: Content
-
 type: module
+description: Provides the 'Virtual Entities'
 core: 8.x
-
+package: Content
 dependencies:
   - drupal:system (>=8.3.1)

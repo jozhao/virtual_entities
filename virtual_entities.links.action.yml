@@ -1,5 +1,10 @@
-virtual_entity.type_add:
-  route_name: virtual_entity.type_add
-  title: 'Add virtual entity type'
+entity.virtual_entity.add_form:
+  route_name: 'virtual_entity.add_page'
+  title: 'Add Virtual entity'
+  appears_on:
+    - entity.virtual_entity.collection
+entity.virtual_entity_type.add_form:
+  route_name: 'entity.virtual_entity_type.add_form'
+  title: 'Add Virtual entity type'
   appears_on:
     - entity.virtual_entity_type.collection

@@ -1,19 +1,21 @@
 <?php
 
-namespace Drupal\virtual_entities\Entity;
+namespace Drupal\virtual_entities;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 
 /**
- * Provides an interface defining a virtual entity.
+ * Provides an interface for defining Virtual entity entities.
+ *
+ * @ingroup virtual_entities
  */
 interface VirtualEntityInterface extends ContentEntityInterface {
 
   /**
-   * Gets the virtual entity type.
+   * Gets the Virtual entity type.
    *
    * @return string
-   *   The virtual entity type.
+   *   The Virtual entity type.
    */
   public function getType();
 

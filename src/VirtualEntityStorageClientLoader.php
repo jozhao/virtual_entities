@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\virtual_entities\Plugin\VirtualEntity;
+namespace Drupal\virtual_entities;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
 
@@ -9,7 +9,7 @@ use Drupal\Component\Plugin\PluginManagerInterface;
  *
  * @package Drupal\virtual_entities\Plugin\VirtualEntity
  */
-class StorageClientLoader {
+class VirtualEntityStorageClientLoader {
 
   /**
    * The storage client manager.
@@ -49,7 +49,7 @@ class StorageClientLoader {
       ->getStorage('virtual_entity_type')
       ->load($bundle_id);
     // Set storage client plugin configuration.
-    $plugin_id = 'virtual_entity_client_restful';
+    $plugin_id = $bundle->getClient();
     $plugin_configuration = [
       'endpoint' => $bundle->getEndPoint(),
       'format' => $bundle->getFormat(),

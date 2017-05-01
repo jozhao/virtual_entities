@@ -2,13 +2,16 @@
 
 namespace Drupal\virtual_entities\Entity;
 
-use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\virtual_entities\VirtualEntityInterface;
 
 /**
- * Defines the virtual entity class.
+ * Defines the Virtual entity entity.
+ *
+ * @ingroup virtual_entities
  *
  * @ContentEntityType(
  *   id = "virtual_entity",
@@ -22,20 +25,26 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   ),
  *   bundle_label = @Translation("Virtual entity type"),
  *   handlers = {
- *     "storage" = "Drupal\virtual_entities\Entity\VirtualEntityStorage",
- *     "storage_schema" = "Drupal\virtual_entities\Entity\VirtualEntityStorageSchema",
+ *     "storage" = "Drupal\virtual_entities\VirtualEntityStorage",
+ *     "storage_schema" = "Drupal\virtual_entities\VirtualEntityStorageSchema",
+ *
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
- *     "access" = "Drupal\virtual_entities\Access\VirtualEntityAccessControlHandler",
+ *     "list_builder" = "Drupal\virtual_entities\VirtualEntityListBuilder",
+ *     "views_data" = "Drupal\virtual_entities\Entity\VirtualEntityViewsData",
+ *
  *     "form" = {
- *       "default" = "Drupal\virtual_entities\VirtualEntityForm",
- *       "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm",
- *       "edit" = "Drupal\virtual_entities\VirtualEntityForm"
+ *       "default" = "Drupal\virtual_entities\Form\VirtualEntityForm",
+ *       "add" = "Drupal\virtual_entities\Form\VirtualEntityForm",
+ *       "edit" = "Drupal\virtual_entities\Form\VirtualEntityForm",
+ *       "delete" = "Drupal\virtual_entities\Form\VirtualEntityDeleteForm",
  *     },
+ *     "access" = "Drupal\virtual_entities\VirtualEntityAccessControlHandler",
  *     "route_provider" = {
- *       "html" = "Drupal\virtual_entities\Routing\VirtualEntityRouteProvider",
+ *       "html" = "Drupal\virtual_entities\VirtualEntityHtmlRouteProvider",
  *     },
- *     "list_builder" = "Drupal\virtual_entities\Entity\VirtualEntityListBuilder",
  *   },
+ *   base_table = "virtual_entity",
+ *   admin_permission = "administer virtual entity entities",
  *   translatable = FALSE,
  *   entity_keys = {
  *     "id" = "id",
@@ -43,39 +52,18 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "label" = "title",
  *     "uuid" = "uuid"
  *   },
- *   bundle_entity_type = "virtual_entity_type",
- *   field_ui_base_route = "entity.virtual_entity_type.edit_form",
- *   common_reference_target = TRUE,
- *   permission_granularity = "bundle",
  *   links = {
  *     "canonical" = "/virtual-entity/{virtual_entity}",
+ *     "add-form" = "/virtual-entity/add",
  *     "delete-form" = "/virtual-entity/{virtual_entity}/delete",
- *     "edit-form" = "/virtual-entity/{virtual_entity}/edit"
- *   }
+ *     "edit-form" = "/virtual-entity/{virtual_entity}/edit",
+ *     "collection" = "/admin/content/virtual_entity",
+ *   },
+ *   bundle_entity_type = "virtual_entity_type",
+ *   field_ui_base_route = "entity.virtual_entity_type.edit_form"
  * )
  */
 class VirtualEntity extends ContentEntityBase implements VirtualEntityInterface {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function virtualId() {
-    return md5(parent::id());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getType() {
-    return $this->bundle();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function id() {
-    return self::getType() . '-' . self::virtualId();
-  }
 
   /**
    * {@inheritdoc}
@@ -102,40 +90,60 @@ class VirtualEntity extends ContentEntityBase implements VirtualEntityInterface 
   /**
    * {@inheritdoc}
    */
-  public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
-    $fields['id'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Virtual Entity ID'))
-      ->setDescription(t('The virtual entity ID.'))
-      ->setReadOnly(TRUE);
+  public function getType() {
+    return $this->bundle();
+  }
 
-    $fields['uuid'] = BaseFieldDefinition::create('uuid')
-      ->setLabel(t('UUID'))
-      ->setDescription(t('The virtual entity UUID.'))
+  /**
+   * {@inheritdoc}
+   */
+  public function virtualId() {
+    return md5(parent::id());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function id() {
+    return self::getType() . '-' . self::virtualId();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
+    $fields['id'] = BaseFieldDefinition::create('integer')
+      ->setLabel(t('ID'))
+      ->setDescription(t('The ID of the Virtual entity entity.'))
       ->setReadOnly(TRUE);
 
     $fields['type'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Type'))
-      ->setDescription(t('The virtual entity type.'))
+      ->setDescription(t('The Virtual entity type/bundle.'))
       ->setSetting('target_type', 'virtual_entity_type')
+      ->setRequired(TRUE);
+
+    $fields['uuid'] = BaseFieldDefinition::create('uuid')
+      ->setLabel(t('UUID'))
+      ->setDescription(t('The UUID of the Virtual entity entity.'))
       ->setReadOnly(TRUE);
 
     $fields['title'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Title'))
-      ->setRequired(TRUE)
-      ->setTranslatable(FALSE)
-      ->setRevisionable(FALSE)
-      ->setDefaultValue('')
+      ->setDescription(t('The name of the Virtual entity entity.'))
       ->setSetting('max_length', 255)
+      ->setDefaultValue('')
       ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'string',
-        'weight' => -5,
+        'weight' => -4,
       ])
       ->setDisplayOptions('form', [
         'type' => 'string_textfield',
-        'weight' => -5,
+        'weight' => -4,
       ])
-      ->setDisplayConfigurable('form', TRUE);
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
 
     return $fields;
   }
@@ -170,6 +178,7 @@ class VirtualEntity extends ContentEntityBase implements VirtualEntityInterface 
         $object->{$destination} = substr($this->get($source)->{$property}, $offset);
       }
     }
+
     return $object;
   }
 
@@ -217,6 +226,7 @@ class VirtualEntity extends ContentEntityBase implements VirtualEntityInterface 
       }
       $this->set($destination, $destination_value);
     }
+
     return $this;
   }
 

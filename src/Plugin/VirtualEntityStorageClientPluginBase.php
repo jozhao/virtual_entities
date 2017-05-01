@@ -1,15 +1,13 @@
 <?php
 
-namespace Drupal\virtual_entities\Plugin\VirtualEntity;
+namespace Drupal\virtual_entities\Plugin;
 
 use Drupal\Component\Plugin\PluginBase;
 
 /**
- * Class StorageClientAbstract.
- *
- * @package Drupal\virtual_entities\StorageClient
+ * Base class for Virtual entity storage client plugins.
  */
-abstract class StorageClientAbstract extends PluginBase implements StorageClientInterface {
+abstract class VirtualEntityStorageClientPluginBase extends PluginBase implements VirtualEntityStorageClientPluginInterface {
 
   /**
    * The HTTP client to fetch the data with.
@@ -30,6 +28,18 @@ abstract class StorageClientAbstract extends PluginBase implements StorageClient
     }
     else {
       $this->httpClient = \Drupal::httpClient();
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPluginLabel() {
+    if (isset($this->pluginDefinition['label'])) {
+      return $this->pluginDefinition['label'];
+    }
+    else {
+      return NULL;
     }
   }
 

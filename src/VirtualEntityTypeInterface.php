@@ -1,13 +1,11 @@
 <?php
 
-namespace Drupal\virtual_entities\Entity;
+namespace Drupal\virtual_entities;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 
 /**
- * Interface VirtualEntityTypeInterface.
- *
- * @package Drupal\virtual_entities
+ * Provides an interface for defining Virtual entity type entities.
  */
 interface VirtualEntityTypeInterface extends ConfigEntityInterface {
 

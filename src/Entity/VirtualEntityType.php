@@ -3,60 +3,56 @@
 namespace Drupal\virtual_entities\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
+use Drupal\virtual_entities\VirtualEntityTypeInterface;
 
 /**
- * Defines the Virtual Entity type configuration entity.
+ * Defines the Virtual entity type entity.
  *
  * @ConfigEntityType(
  *   id = "virtual_entity_type",
  *   label = @Translation("Virtual entity type"),
  *   handlers = {
- *     "access" = "Drupal\virtual_entities\Access\VirtualEntityTypeAccessControlHandler",
+ *     "list_builder" = "Drupal\virtual_entities\VirtualEntityTypeListBuilder",
  *     "form" = {
  *       "add" = "Drupal\virtual_entities\Form\VirtualEntityTypeForm",
  *       "edit" = "Drupal\virtual_entities\Form\VirtualEntityTypeForm",
- *       "delete" = "Drupal\virtual_entities\Form\VirtualEntityTypeDeleteConfirm"
+ *       "delete" = "Drupal\virtual_entities\Form\VirtualEntityTypeDeleteForm"
  *     },
- *     "list_builder" = "Drupal\virtual_entities\Entity\VirtualEntityTypeListBuilder",
+ *     "route_provider" = {
+ *       "html" = "Drupal\virtual_entities\VirtualEntityTypeHtmlRouteProvider",
+ *     },
  *   },
- *   admin_permission = "administer virtual entity types",
- *   config_prefix = "type",
+ *   config_prefix = "virtual_entity_type",
+ *   admin_permission = "administer site configuration",
  *   bundle_of = "virtual_entity",
  *   entity_keys = {
- *     "id" = "type",
- *     "label" = "label"
+ *     "id" = "id",
+ *     "label" = "label",
+ *     "uuid" = "uuid"
  *   },
  *   links = {
- *     "edit-form" = "/admin/structure/virtual-entity-types/manage/{virtual_entity_type}",
- *     "delete-form" = "/admin/structure/virtual-entity-types/manage/{virtual_entity_type}/delete",
- *     "collection" = "/admin/structure/virtual-entity-types",
- *   },
- *   config_export = {
- *     "label",
- *     "type",
- *     "description",
- *     "help",
- *     "endpoint",
- *     "format",
- *     "field_mappings",
+ *     "canonical" = "/admin/structure/virtual_entity_type/{virtual_entity_type}",
+ *     "add-form" = "/admin/structure/virtual_entity_type/add",
+ *     "edit-form" = "/admin/structure/virtual_entity_type/{virtual_entity_type}/edit",
+ *     "delete-form" = "/admin/structure/virtual_entity_type/{virtual_entity_type}/delete",
+ *     "collection" = "/admin/structure/virtual_entity_type"
  *   }
  * )
  */
 class VirtualEntityType extends ConfigEntityBundleBase implements VirtualEntityTypeInterface {
+  /**
+   * The Virtual entity type ID.
+   *
+   * @var string
+   */
+  protected $id;
 
   /**
-   * The human-readable name of the entity type.
+   * The Virtual entity type label.
    *
    * @var string
    */
   protected $label;
-
-  /**
-   * The machine name of this entity type.
-   *
-   * @var string
-   */
-  protected $type;
 
   /**
    * A brief description of this entity type.
@@ -80,6 +76,20 @@ class VirtualEntityType extends ConfigEntityBundleBase implements VirtualEntityT
   protected $endpoint;
 
   /**
+   * The parameters for the endpoint.
+   *
+   * @var array
+   */
+  protected $parameters = [];
+
+  /**
+   * The external entity storage client id.
+   *
+   * @var string
+   */
+  protected $client = 'virtual_entity_storage_client_plugin_restful';
+
+  /**
    * The format in which to make the requests for this entity type.
    *
    * For example: 'json'.
@@ -94,21 +104,6 @@ class VirtualEntityType extends ConfigEntityBundleBase implements VirtualEntityT
    * @var array
    */
   protected $field_mappings = [];
-
-  /**
-   * {@inheritdoc}
-   */
-  public function id() {
-    return $this->type;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isLocked() {
-    $locked = \Drupal::state()->get('virtual_entity.type.locked');
-    return isset($locked[$this->id()]) ? $locked[$this->id()] : FALSE;
-  }
 
   /**
    * {@inheritdoc}
@@ -129,6 +124,20 @@ class VirtualEntityType extends ConfigEntityBundleBase implements VirtualEntityT
    */
   public function getEndPoint() {
     return $this->endpoint;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getParameters() {
+    return $this->parameters;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getClient() {
+    return $this->client;
   }
 
   /**

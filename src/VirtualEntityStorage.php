@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\virtual_entities\Entity;
+namespace Drupal\virtual_entities;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\ContentEntityStorageBase;
@@ -9,7 +9,6 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Component\Plugin\PluginManagerInterface;
-use Drupal\virtual_entities\Plugin\VirtualEntity\StorageClientLoader;
 use GuzzleHttp\ClientInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -46,7 +45,7 @@ class VirtualEntityStorage extends ContentEntityStorageBase {
       $entity_type,
       $container->get('entity.manager'),
       $container->get('cache.entity'),
-      $container->get('plugin.manager.virtual_entity_storage_client'),
+      $container->get('plugin.manager.virtual_entity.storage_client.plugin.processor'),
       $container->get('http_client')
     );
   }
@@ -103,7 +102,7 @@ class VirtualEntityStorage extends ContentEntityStorageBase {
       if (strpos($id, '-')) {
         list($bundle, $virtualId) = explode('-', $id);
         if ($virtualId) {
-          $clientLoader = new StorageClientLoader($this->storageClientManager);
+          $clientLoader = new VirtualEntityStorageClientLoader($this->storageClientManager);
           $virtualEntity = $clientLoader->getStorageClient($bundle)->load($virtualId);
           if ($virtualEntity) {
             $entities[$id] = $this->create([$this->entityType->getKey('bundle') => $bundle])->mapObject($virtualEntity)->enforceIsNew(FALSE);

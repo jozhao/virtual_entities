@@ -46,7 +46,7 @@ class Query extends QueryBase implements QueryInterface {
   /**
    * The storage client.
    *
-   * @var \Drupal\virtual_entities\Plugin\VirtualEntity\StorageClientInterface
+   * @var \Drupal\virtual_entities\Plugin\VirtualEntityStorageClientPluginInterface
    */
   protected $storageClient;
 
@@ -128,7 +128,7 @@ class Query extends QueryBase implements QueryInterface {
    * @return int|array
    *   Returns the query result as entity IDs.
    *
-   * @see \Drupal\virtual_entities\Plugin\VirtualEntity\StorageClient\Restful
+   * @see \Drupal\virtual_entities\Plugin\VirtualEntityStorageClientPlugin\Restful
    */
   protected function result() {
     if ($this->count) {
@@ -166,7 +166,7 @@ class Query extends QueryBase implements QueryInterface {
       // Load bundle instance object.
       $bundle = \Drupal::entityTypeManager()->getStorage($bundle_entity_type)->load('resource');
       // Set storage client plugin configuration.
-      $plugin_id = 'virtual_entity_client_restful';
+      $plugin_id = 'virtual_entity_storage_client_plugin_restful';
       $plugin_configuration = [
         'endpoint' => $bundle->getEndPoint(),
         'format' => $bundle->getFormat(),

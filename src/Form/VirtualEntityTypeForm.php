@@ -3,41 +3,14 @@
 namespace Drupal\virtual_entities\Form;
 
 use Drupal\Core\Entity\BundleEntityFormBase;
-use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Form handler for virtual entity type forms.
+ * Class VirtualEntityTypeForm.
+ *
+ * @package Drupal\virtual_entities\Form
  */
 class VirtualEntityTypeForm extends BundleEntityFormBase {
-
-  /**
-   * The entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
-   */
-  protected $entityManager;
-
-  /**
-   * Constructs the NodeTypeForm object.
-   *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
-   */
-  public function __construct(EntityManagerInterface $entity_manager) {
-    $this->entityManager = $entity_manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('entity.manager')
-    );
-  }
 
   /**
    * {@inheritdoc}
@@ -45,54 +18,31 @@ class VirtualEntityTypeForm extends BundleEntityFormBase {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
-    $type = $this->entity;
-    if ($this->operation == 'add') {
-      $form['#title'] = $this->t('Add virtual entity type');
-      $fields = $this->entityManager->getBaseFieldDefinitions('virtual_entity');
-    }
-    else {
-      $form['#title'] = $this->t('Edit %label virtual entity type', ['%label' => $type->label()]);
-      $fields = $this->entityManager->getFieldDefinitions('virtual_entity', $type->id());
-    }
-
-    // Remove the not used fields.
-    unset($fields[$this->entityManager->getDefinition('virtual_entity')->getKey('uuid')]);
-    unset($fields[$this->entityManager->getDefinition('virtual_entity')->getKey('bundle')]);
+    $virtual_entity_type = $this->entity;
 
     $form['label'] = [
-      '#title' => t('Name'),
       '#type' => 'textfield',
-      '#default_value' => $type->label(),
-      '#description' => t('The human-readable name of this content type. This name must be unique.'),
+      '#title' => $this->t('Label'),
+      '#maxlength' => 255,
+      '#default_value' => $virtual_entity_type->label(),
+      '#description' => $this->t("Label for the Virtual entity type."),
       '#required' => TRUE,
-      '#size' => 30,
     ];
 
-    $form['type'] = [
+    $form['id'] = [
       '#type' => 'machine_name',
-      '#default_value' => $type->id(),
-      '#maxlength' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
-      '#disabled' => $type->isLocked(),
+      '#default_value' => $virtual_entity_type->id(),
       '#machine_name' => [
-        'exists' => ['Drupal\virtual_entities\Entity\VirtualEntityType', 'load'],
-        'source' => ['label'],
+        'exists' => '\Drupal\virtual_entities\Entity\VirtualEntityType::load',
       ],
-      '#description' => t('A unique machine-readable name for this content type. It must only contain lowercase letters, numbers, and underscores.'),
+      '#disabled' => !$virtual_entity_type->isNew(),
     ];
 
     $form['description'] = [
-      '#title' => t('Description'),
+      '#title' => $this->t('Description'),
       '#type' => 'textarea',
-      '#default_value' => $type->getDescription(),
-      '#description' => t('Virtual entity type description.'),
-    ];
-
-    $form['endpoint'] = [
-      '#title' => t('Endpoint'),
-      '#type' => 'textfield',
-      '#default_value' => $type->getEndpoint(),
-      '#description' => t('Virtual entity endpoint.'),
-      '#required' => TRUE,
+      '#default_value' => $virtual_entity_type->getDescription(),
+      '#description' => $this->t('Virtual entity type description.'),
     ];
 
     $form['additional_settings'] = [
@@ -102,29 +52,102 @@ class VirtualEntityTypeForm extends BundleEntityFormBase {
       ],
     ];
 
+    // Endpoint settings.
+    $form['endpoint_settings'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Endpoint settings'),
+      '#group' => 'additional_settings',
+      '#open' => TRUE,
+    ];
+
+    $form['endpoint_settings']['endpoint'] = [
+      '#title' => t('Endpoint'),
+      '#type' => 'textfield',
+      '#default_value' => $virtual_entity_type->getEndpoint(),
+      '#description' => t('Virtual entity endpoint.'),
+      '#required' => TRUE,
+    ];
+
+    $parameters = $virtual_entity_type->getParameters();
+    $list_lines = [];
+
+    if (!empty($parameters['list'])) {
+      foreach ($parameters['list'] as $parameter => $value) {
+        $list_lines[] = "$parameter|$value";
+      }
+    }
+
+    $form['endpoint_settings']['parameters']['list'] = [
+      '#type' => 'textarea',
+      '#title' => t('List parameters'),
+      '#description' => t('Enter the parameters to add to the endpoint URL when loading the list of entities. One per line in the format "parameter_name|parameter_value"'),
+      '#default_value' => implode("\n", $list_lines),
+    ];
+
+    // Storage client settings.
+    $form['storage_settings'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Storage settings'),
+      '#group' => 'additional_settings',
+      '#open' => FALSE,
+    ];
+
+    // List storage clients.
+    $plugin_manager = \Drupal::service('plugin.manager.virtual_entity.storage_client.plugin.processor');
+    $plugins = $plugin_manager->getDefinitions();
+    $storageClientOptions = [];
+    foreach ($plugins as $client) {
+      $storageClientOptions[$client['id']] = $client['label'];
+    }
+    $form['storage_settings']['client'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Storage client'),
+      '#options' => $storageClientOptions,
+      '#required' => TRUE,
+      '#default_value' => $virtual_entity_type->getClient(),
+    ];
+
+    // List supported formats.
+    $formats = \Drupal::service('virtual_entity.storage_client.decoder')->supportedFormats();
+    $form['storage_settings']['format'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Format'),
+      '#options' => array_combine($formats, $formats),
+      '#required' => TRUE,
+      '#default_value' => $virtual_entity_type->getFormat(),
+    ];
+
+    // Field mappings.
     $form['field_mappings'] = [
       '#type' => 'details',
       '#title' => $this->t('Field mappings'),
       '#group' => 'additional_settings',
-      '#open' => TRUE,
+      '#open' => FALSE,
     ];
+
+    // Get entity field manager.
+    $entityFieldManager = \Drupal::service('entity_field.manager');
+
+    // Fetch fields definitions.
+    if ($this->operation == 'add') {
+      $fields = $entityFieldManager->getBaseFieldDefinitions('virtual_entity');
+    }
+    else {
+      $fields = $entityFieldManager->getFieldDefinitions('virtual_entity', $virtual_entity_type->id());
+    }
+
+    // Remove the not used fields.
+    unset($fields[$this->entityTypeManager->getDefinition('virtual_entity')->getKey('uuid')]);
+    unset($fields[$this->entityTypeManager->getDefinition('virtual_entity')->getKey('bundle')]);
 
     foreach ($fields as $field) {
       $form['field_mappings'][$field->getName()] = [
         '#title' => $field->getLabel(),
         '#type' => 'textfield',
-        '#default_value' => $type->getFieldMapping($field->getName()),
+        '#default_value' => $virtual_entity_type->getFieldMapping($field->getName()),
         '#required' => isset($fields[$field->getName()]),
       ];
     }
-
-    // Storage client settings.
-    $form['storage_settings'] = [
-      '#type' => 'details',
-      '#title' => $this->t('Virtual storage'),
-      '#group' => 'additional_settings',
-      '#open' => FALSE,
-    ];
 
     // Set form as tree so we can save details.
     $form['#tree'] = TRUE;
@@ -135,27 +158,53 @@ class VirtualEntityTypeForm extends BundleEntityFormBase {
   /**
    * {@inheritdoc}
    */
-  protected function actions(array $form, FormStateInterface $form_state) {
-    $actions = parent::actions($form, $form_state);
-    $actions['submit']['#value'] = t('Save virtual entity type');
-    $actions['delete']['#value'] = t('Delete virtual entity type');
-
-    return $actions;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 
-    $id = trim($form_state->getValue('type'));
+    $id = trim($form_state->getValue('id'));
     // '0' is invalid, since elsewhere we check it using empty().
     if ($id == '0') {
-      $form_state->setErrorByName('type', $this->t("Invalid machine-readable name. Enter a name other than %invalid.", ['%invalid' => $id]));
+      $form_state->setErrorByName('id', $this->t("Invalid machine-readable name. Enter a name other than %invalid.", ['%invalid' => $id]));
     }
 
     // Set custom settings.
+    $form_state->setValue('endpoint', $form_state->getValue(['endpoint_settings', 'endpoint']));
+
+    // Set endpoint parameters.
+    $parameters_types = ['list', 'single'];
+    foreach ($parameters_types as $parameters_type) {
+      $parameters_string = $form_state->getValue(['endpoint_settings', 'parameters'], $parameters_type);
+      // Set default array.
+      $parameters[$parameters_type] = [];
+      if (isset($parameters_string[$parameters_type])) {
+        $list = preg_split('(\r\n|\r|\n)', $parameters_string[$parameters_type]);
+        $list = array_map('trim', $list);
+        $list = array_filter($list, 'strlen');
+        foreach ($list as $text) {
+          // Check for an explicit key.
+          $matches = [];
+          if (preg_match('/(.*)\|(.*)/', $text, $matches)) {
+            // Trim key and value to avoid unwanted spaces issues.
+            $key = trim($matches[1]);
+            $value = trim($matches[2]);
+          }
+          // Otherwise see if we can use the value as the key.
+          else {
+            $key = $value = $text;
+          }
+          $parameters[$parameters_type][$key] = $value;
+        }
+        $form_state->setValue('parameters', $parameters);
+      }
+    }
+    $form_state->unsetValue('endpoint_settings');
+
+    // Set storage settings.
+    $form_state->setValue('client', $form_state->getValue(['storage_settings', 'client']));
+    $form_state->setValue('format', $form_state->getValue(['storage_settings', 'format']));
+    $form_state->unsetValue('storage_settings');
+
+    // Set field mappings.
     $form_state->setValue('field_mappings', array_filter($form_state->getValue('field_mappings')));
     $form_state->unsetValue('field_mappings');
   }
@@ -164,25 +213,22 @@ class VirtualEntityTypeForm extends BundleEntityFormBase {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    $type = $this->entity;
-    $type->set('type', trim($type->id()));
-    $type->set('label', trim($type->label()));
+    $virtual_entity_type = $this->entity;
+    $status = $virtual_entity_type->save();
 
-    $status = $type->save();
+    switch ($status) {
+      case SAVED_NEW:
+        drupal_set_message($this->t('Created the %label Virtual entity type.', [
+          '%label' => $virtual_entity_type->label(),
+        ]));
+        break;
 
-    $t_args = ['%name' => $type->label()];
-
-    if ($status == SAVED_UPDATED) {
-      drupal_set_message(t('The virtual entity type %name has been updated.', $t_args));
+      default:
+        drupal_set_message($this->t('Saved the %label Virtual entity type.', [
+          '%label' => $virtual_entity_type->label(),
+        ]));
     }
-    elseif ($status == SAVED_NEW) {
-      drupal_set_message(t('The virtual entity type %name has been added.', $t_args));
-      $context = array_merge($t_args, ['link' => $type->link($this->t('View'), 'collection')]);
-      $this->logger('virtual_entity')->notice('Added virtual entity type %name.', $context);
-    }
-
-    $this->entityManager->clearCachedFieldDefinitions();
-    $form_state->setRedirectUrl($type->urlInfo('collection'));
+    $form_state->setRedirectUrl($virtual_entity_type->urlInfo('collection'));
   }
 
 }

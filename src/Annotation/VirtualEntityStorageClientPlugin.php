@@ -5,13 +5,14 @@ namespace Drupal\virtual_entities\Annotation;
 use Drupal\Component\Annotation\Plugin;
 
 /**
- * Class StorageClient.
+ * Defines a Virtual entity storage client item annotation object.
  *
- * @package Drupal\virtual_entities\Annotation
+ * @see \Drupal\virtual_entities\Plugin\VirtualEntityStorageClientPluginManager
+ * @see plugin_api
  *
  * @Annotation
  */
-class StorageClient extends Plugin {
+class VirtualEntityStorageClientPlugin extends Plugin {
 
   /**
    * The plugin ID.
@@ -21,12 +22,12 @@ class StorageClient extends Plugin {
   public $id;
 
   /**
-   * The name of the storage client.
+   * The label of the plugin.
    *
    * @var \Drupal\Core\Annotation\Translation
    *
    * @ingroup plugin_translatable
    */
-  public $name;
+  public $label;
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\virtual_entities\Entity;
+namespace Drupal\virtual_entities;
 
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Schema\DynamicallyFieldableEntityStorageSchemaInterface;
