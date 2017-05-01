@@ -28,6 +28,20 @@ class VirtualEntityStorage extends ContentEntityStorageBase {
   protected $storageClientManager;
 
   /**
+   * The decoder to decode the data.
+   *
+   * @var \Drupal\virtual_entities\VirtualEntityDecoderService
+   */
+  protected $decoder;
+
+  /**
+   * The HTTP client to fetch the data with.
+   *
+   * @var \GuzzleHttp\ClientInterface
+   */
+  protected $httpClient;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(EntityTypeInterface $entity_type, EntityManagerInterface $entity_manager, CacheBackendInterface $cache, PluginManagerInterface $storage_client_manager, ClientInterface $http_client) {

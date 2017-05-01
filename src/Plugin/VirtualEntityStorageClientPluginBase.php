@@ -17,6 +17,13 @@ abstract class VirtualEntityStorageClientPluginBase extends PluginBase implement
   protected $httpClient;
 
   /**
+   * The decoder to decode the data.
+   *
+   * @var \Drupal\virtual_entities\VirtualEntityDecoderService
+   */
+  protected $decoder;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
@@ -29,6 +36,9 @@ abstract class VirtualEntityStorageClientPluginBase extends PluginBase implement
     else {
       $this->httpClient = \Drupal::httpClient();
     }
+
+    // Set decoder.
+    $this->decoder = $this->configuration['decoder'];
   }
 
   /**
