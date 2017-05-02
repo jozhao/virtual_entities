@@ -113,7 +113,7 @@ class VirtualEntity extends ContentEntityBase implements VirtualEntityInterface 
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields['id'] = BaseFieldDefinition::create('integer')
-      ->setLabel(t('ID'))
+      ->setLabel(t('Unique ID'))
       ->setDescription(t('The ID of the Virtual entity entity.'))
       ->setReadOnly(TRUE);
 

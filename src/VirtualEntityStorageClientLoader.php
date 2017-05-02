@@ -51,6 +51,8 @@ class VirtualEntityStorageClientLoader {
     $plugin_id = $bundle->getClient();
     $plugin_configuration = [
       'endpoint' => $bundle->getEndPoint(),
+      'entitiesIdentity' => $bundle->getEntitiesIdentity(),
+      'entityUniqueId' => $bundle->getFieldMapping('id'),
       'format' => $bundle->getFormat(),
       'httpClientParameters' => [
         'headers' => [],

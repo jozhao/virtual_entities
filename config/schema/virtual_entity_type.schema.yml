@@ -19,6 +19,9 @@ virtual_entities.virtual_entity_type.*:
     read_only:
       type: boolean
       label: 'Read only'
+    entities_identity:
+      type: string
+      label: 'Entities identity'
     parameters:
       type: mapping
       label: 'Parameters'

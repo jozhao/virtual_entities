@@ -76,6 +76,13 @@ class VirtualEntityType extends ConfigEntityBundleBase implements VirtualEntityT
   protected $endpoint;
 
   /**
+   * The entities identity.
+   *
+   * @var string
+   */
+  protected $entities_identity = '';
+
+  /**
    * The parameters for the endpoint.
    *
    * @var array
@@ -124,6 +131,13 @@ class VirtualEntityType extends ConfigEntityBundleBase implements VirtualEntityT
    */
   public function getEndPoint() {
     return $this->endpoint;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEntitiesIdentity() {
+    return $this->entities_identity;
   }
 
   /**

@@ -32,9 +32,18 @@ class Restful extends VirtualEntityStorageClientPluginBase {
       // Fetch data contents from remote.
       $data = $response->getBody()->getContents();
       // Use decoder to parse the data.
-      $results = (object) $this->decoder->getDecoder($this->configuration['format'])->decode($data);
+      $results = $this->decoder->getDecoder($this->configuration['format'])->decode($data);
 
-      return $results->articles;
+      // If entities identity is set, return.
+      if (!empty($this->configuration['entitiesIdentity'])) {
+        $entitiesIdentity = (string) $this->configuration['entitiesIdentity'];
+        // Check if this identity is available.
+        if (isset($results[$entitiesIdentity])) {
+          return (object) $results[$entitiesIdentity];
+        }
+      }
+
+      return (object) $results;
     }
     catch (RequestException $e) {
       watchdog_exception('virtual_entities', $e);
@@ -51,9 +60,12 @@ class Restful extends VirtualEntityStorageClientPluginBase {
 
     $items = self::$results;
 
+    // Get entity unique ID.
+    $entityUniqueId = (string) $this->configuration['entityUniqueId'];
+
     foreach ($items as $item) {
       $item = (object) $item;
-      if (md5($item->url) == $id) {
+      if (isset($item->$entityUniqueId) && md5($item->$entityUniqueId) == $id) {
         return (object) $item;
       }
     }

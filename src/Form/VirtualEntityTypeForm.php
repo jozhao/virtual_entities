@@ -68,6 +68,13 @@ class VirtualEntityTypeForm extends BundleEntityFormBase {
       '#required' => TRUE,
     ];
 
+    $form['endpoint_settings']['entities_identity'] = [
+      '#title' => t('Entities identity'),
+      '#type' => 'textfield',
+      '#default_value' => $virtual_entity_type->getEntitiesIdentity(),
+      '#description' => t('Virtual entities identity.'),
+    ];
+
     $parameters = $virtual_entity_type->getParameters();
     $list_lines = [];
 
@@ -79,7 +86,7 @@ class VirtualEntityTypeForm extends BundleEntityFormBase {
 
     $form['endpoint_settings']['parameters']['list'] = [
       '#type' => 'textarea',
-      '#title' => t('List parameters'),
+      '#title' => t('Entities list parameters'),
       '#description' => t('Enter the parameters to add to the endpoint URL when loading the list of entities. One per line in the format "parameter_name|parameter_value"'),
       '#default_value' => implode("\n", $list_lines),
     ];
@@ -169,6 +176,7 @@ class VirtualEntityTypeForm extends BundleEntityFormBase {
 
     // Set custom settings.
     $form_state->setValue('endpoint', $form_state->getValue(['endpoint_settings', 'endpoint']));
+    $form_state->setValue('entities_identity', $form_state->getValue(['endpoint_settings', 'entities_identity']));
 
     // Set endpoint parameters.
     $parameters_types = ['list', 'single'];

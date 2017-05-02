@@ -34,6 +34,14 @@ interface VirtualEntityTypeInterface extends ConfigEntityInterface {
   public function getEndpoint();
 
   /**
+   * Get entities identity.
+   *
+   * @return string
+   *   Return the entities identity.
+   */
+  public function getEntitiesIdentity();
+
+  /**
    * Gets the client endpoint parse format.
    *
    * @return string
