@@ -27,24 +27,34 @@ class Restful extends VirtualEntityStorageClientPluginBase {
    */
   public function query(array $parameters = []) {
     try {
-      $response = $this->httpClient->get($this->configuration['endpoint'], $this->configuration['httpClientParameters']);
-
-      // Fetch data contents from remote.
-      $data = $response->getBody()->getContents();
-      // Use decoder to parse the data.
-      $results = $this->decoder->getDecoder($this->configuration['format'])->decode($data);
-
-      // If entities identity is set, return.
-      if (!empty($this->configuration['entitiesIdentity'])) {
-        $entitiesIdentity = (string) $this->configuration['entitiesIdentity'];
-        // Check if this identity is available.
-        if (isset($results[$entitiesIdentity])) {
-          $results = $results[$entitiesIdentity];
-        }
+      // Load from cache.
+      $cid = md5($this->configuration['endpoint']);
+      if ($cache = \Drupal::cache('virtual_entities')->get($cid)) {
+        self::$results = $cache->data;
       }
+      else {
+        $response = $this->httpClient->get($this->configuration['endpoint'], $this->configuration['httpClientParameters']);
 
-      // Save results.
-      self::$results = (object) $results;
+        // Fetch data contents from remote.
+        $data = $response->getBody()->getContents();
+        // Use decoder to parse the data.
+        $results = $this->decoder->getDecoder($this->configuration['format'])->decode($data);
+
+        // If entities identity is set, return.
+        if (!empty($this->configuration['entitiesIdentity'])) {
+          $entitiesIdentity = (string) $this->configuration['entitiesIdentity'];
+          // Check if this identity is available.
+          if (isset($results[$entitiesIdentity])) {
+            $results = $results[$entitiesIdentity];
+          }
+        }
+
+        // Save results.
+        self::$results = (object) $results;
+        // Save into cache table.
+        $cid = md5($this->configuration['endpoint']);
+        \Drupal::cache('virtual_entities')->set($cid, self::$results);
+      }
 
       return self::$results;
     }
@@ -58,7 +68,14 @@ class Restful extends VirtualEntityStorageClientPluginBase {
    */
   public function load($id) {
     if (empty(self::$results)) {
-      self::$results = $this->query();
+      // Load from cache.
+      $cid = md5($this->configuration['endpoint']);
+      if ($cache = \Drupal::cache('virtual_entities')->get($cid)) {
+        self::$results = $cache->data;
+      }
+      else {
+        self::$results = $this->query();
+      }
     }
 
     $items = self::$results;
