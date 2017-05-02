@@ -180,6 +180,10 @@ class Query extends QueryBase implements QueryInterface {
       if (FALSE === $bundle->getFieldMapping('id')) {
         continue;
       }
+      // Continue if unique ID is not available.
+      if (!isset($query_result->{$bundle->getFieldMapping('id')})) {
+        continue;
+      }
       $hashed_id = md5($query_result->{$bundle->getFieldMapping('id')});
       $id = $bundle_id . '-' . $hashed_id;
       $result[$id] = $id;
