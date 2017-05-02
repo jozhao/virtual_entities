@@ -3,6 +3,7 @@
 namespace Drupal\virtual_entities\Plugin\VirtualEntityStorageClientPlugin;
 
 use Drupal\virtual_entities\Plugin\VirtualEntityStorageClientPluginBase;
+use GuzzleHttp\Exception\RequestException;
 
 /**
  * Restful client.
@@ -39,12 +40,16 @@ class Restful extends VirtualEntityStorageClientPluginBase {
           'headers' => [],
         ]
       );
+
+      // Fetch data contents from remote.
       $data = $response->getBody()->getContents();
-      $results = json_decode($data);
+      // Use decoder to parse the data.
+      $results = (object) $this->decoder->getDecoder($this->configuration['format'])->decode($data);
 
       return $results->articles;
-    } catch (RequestException $e) {
-      watchdog_exception('virtual_entities', $e->getMessage());
+    }
+    catch (RequestException $e) {
+      watchdog_exception('virtual_entities', $e);
     }
   }
 
@@ -59,6 +64,7 @@ class Restful extends VirtualEntityStorageClientPluginBase {
     $items = self::$results;
 
     foreach ($items as $item) {
+      $item = (object) $item;
       if (md5($item->url) == $id) {
         return (object) $item;
       }

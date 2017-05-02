@@ -45,9 +45,7 @@ class VirtualEntityStorageClientLoader {
    */
   public function addStorageClient($bundle_id) {
     // Get bundle settings.
-    $bundle = \Drupal::entityTypeManager()
-      ->getStorage('virtual_entity_type')
-      ->load($bundle_id);
+    $bundle = \Drupal::entityTypeManager()->getStorage('virtual_entity_type')->load($bundle_id);
     // Set storage client plugin configuration.
     $plugin_id = $bundle->getClient();
     $plugin_configuration = [

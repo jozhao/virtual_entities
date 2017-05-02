@@ -6,6 +6,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Query\QueryBase;
 use Drupal\Core\Entity\Query\QueryFactoryInterface;
 use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\virtual_entities\VirtualEntityDecoderServiceInterface;
 use GuzzleHttp\ClientInterface;
 
 /**
@@ -37,16 +38,26 @@ class QueryFactory implements QueryFactoryInterface {
   protected $storageClientManager;
 
   /**
+   * The decoder to decode the data.
+   *
+   * @var \Drupal\virtual_entities\VirtualEntityDecoderService
+   */
+  protected $decoder;
+
+  /**
    * QueryFactory constructor.
    *
    * @param \Drupal\Component\Plugin\PluginManagerInterface $storage_client_manager
    *   Plugin manager instance.
+   * @param \Drupal\virtual_entities\VirtualEntityDecoderServiceInterface $decoder
+   *   Decoder instance.
    * @param \GuzzleHttp\ClientInterface $http_client
    *   GuzzleHttp client.
    */
-  public function __construct(PluginManagerInterface $storage_client_manager, ClientInterface $http_client) {
+  public function __construct(PluginManagerInterface $storage_client_manager, VirtualEntityDecoderServiceInterface $decoder, ClientInterface $http_client) {
     $this->namespaces = QueryBase::getNamespaces($this);
     $this->storageClientManager = $storage_client_manager;
+    $this->decoder = $decoder;
     $this->httpClient = $http_client;
   }
 
@@ -56,7 +67,7 @@ class QueryFactory implements QueryFactoryInterface {
   public function get(EntityTypeInterface $entity_type, $conjunction) {
     $class = QueryBase::getClass($this->namespaces, 'Query');
 
-    return new $class($entity_type, $conjunction, $this->storageClientManager, $this->httpClient, $this->namespaces);
+    return new $class($entity_type, $conjunction, $this->storageClientManager, $this->decoder, $this->httpClient, $this->namespaces);
   }
 
   /**

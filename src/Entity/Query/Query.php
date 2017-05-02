@@ -5,8 +5,11 @@ namespace Drupal\virtual_entities\Entity\Query;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Query\QueryBase;
 use Drupal\Core\Entity\Query\QueryInterface;
+use Drupal\Core\Entity\Query\ConditionInterface;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use GuzzleHttp\ClientInterface;
+use Drupal\virtual_entities\VirtualEntityDecoderServiceInterface;
+use Drupal\virtual_entities\VirtualEntityStorageClientLoader;
 
 /**
  * Class Query.
@@ -21,6 +24,13 @@ class Query extends QueryBase implements QueryInterface {
    * @var array
    */
   protected $parameters = [];
+
+  /**
+   * The decoder to decode the data.
+   *
+   * @var \Drupal\virtual_entities\VirtualEntityDecoderService
+   */
+  protected $decoder;
 
   /**
    * The HTTP client to fetch the data with.
@@ -59,15 +69,18 @@ class Query extends QueryBase implements QueryInterface {
    *   Query condition.
    * @param \Drupal\Component\Plugin\PluginManagerInterface $storage_client_manager
    *   Storage client plugin manager.
+   * @param \Drupal\virtual_entities\VirtualEntityDecoderServiceInterface $decoder
+   *   Decoder instance.
    * @param \GuzzleHttp\ClientInterface $http_client
    *   GuzzleHttp client.
    * @param array $namespaces
    *   Current entity namespace.
    */
-  public function __construct(EntityTypeInterface $entity_type, $conjunction, PluginManagerInterface $storage_client_manager, ClientInterface $http_client, array $namespaces) {
+  public function __construct(EntityTypeInterface $entity_type, $conjunction, PluginManagerInterface $storage_client_manager, VirtualEntityDecoderServiceInterface $decoder, ClientInterface $http_client, array $namespaces) {
     parent::__construct($entity_type, $conjunction, $namespaces);
 
     $this->storageClientManager = $storage_client_manager;
+    $this->decoder = $decoder;
     $this->httpClient = $http_client;
   }
 
@@ -131,18 +144,26 @@ class Query extends QueryBase implements QueryInterface {
    * @see \Drupal\virtual_entities\Plugin\VirtualEntityStorageClientPlugin\Restful
    */
   protected function result() {
+    // Load storage client.
+    $clientLoader = new VirtualEntityStorageClientLoader($this->storageClientManager);
+    // Get all the bundles.
+    $bundles = \Drupal::service('entity_type.bundle.info')->getBundleInfo($this->entityType->id());
+    // Load entity types act as bundles.
+    $bundle_id = empty($this->getBundle()) ? key($bundles) : $this->getBundle();
+
     if ($this->count) {
-      return count($this->getStorageClient()->query($this->httpClientParameters));
+      return count($clientLoader->getStorageClient($bundle_id)->query($this->httpClientParameters));
     }
 
     // Fetch entities ids.
-    $query_results = $this->getStorageClient()->query($this->httpClientParameters);
+    $query_results = $clientLoader->getStorageClient($bundle_id)->query($this->httpClientParameters);
     $result = [];
-    $bundle_id = 'resource';
+
     $bundle_entity_type = $this->entityType->getBundleEntityType();
     $bundle = \Drupal::entityTypeManager()->getStorage($bundle_entity_type)->load($bundle_id);
 
     foreach ($query_results as $query_result) {
+      $query_result = (object) $query_result;
       if (FALSE === $bundle->getFieldMapping('id')) {
         continue;
       }
@@ -155,40 +176,50 @@ class Query extends QueryBase implements QueryInterface {
   }
 
   /**
-   * Get the storage client for a bundle.
+   * Set the Parameter.
    *
-   * @see \Drupal\virtual_entities\Entity\VirtualEntityType
-   */
-  protected function getStorageClient() {
-    if (empty($this->storageClient)) {
-      // Load entity types act as bundles.
-      $bundle_entity_type = $this->entityType->getBundleEntityType();
-      // Load bundle instance object.
-      $bundle = \Drupal::entityTypeManager()->getStorage($bundle_entity_type)->load('resource');
-      // Set storage client plugin configuration.
-      $plugin_id = 'virtual_entity_storage_client_plugin_restful';
-      $plugin_configuration = [
-        'endpoint' => $bundle->getEndPoint(),
-        'format' => $bundle->getFormat(),
-      ];
-      // Load storage client class.
-      $this->storageClient = $this->storageClientManager->createInstance(
-        $plugin_id,
-        $plugin_configuration
-      );
-    }
-
-    return $this->storageClient;
-  }
-
-  /**
-   * Set a parameter.
+   * @param $key
+   *   Parameter key.
+   * @param $value
+   *   Parameter value.
+   *
+   * @return bool
+   *   Set parameter.
    */
   public function setParameter($key, $value) {
     if ($key == $this->entityType->getKey('bundle')) {
       return FALSE;
     }
     $this->parameters[$key] = is_array($value) ? implode($value, ',') : $value;
+  }
+
+  /**
+   * Get entity bundle from query conditions.
+   *
+   * @param \Drupal\Core\Entity\Query\ConditionInterface|NULL $condition
+   *
+   * @return bool|mixed
+   *   Bundle name or FALSE.
+   */
+  protected function getBundle(ConditionInterface $condition = NULL) {
+    if (is_null($condition)) {
+      $condition = $this->condition;
+    }
+
+    foreach ($condition->conditions() as $c) {
+      if ($c['field'] instanceOf ConditionInterface) {
+        $bundle = $this->getBundle($c['field']);
+        if ($bundle) {
+          return $bundle;
+        }
+      }
+      else {
+        if ($c['field'] == $this->entityType->getKey('bundle')) {
+          return is_array($c['value']) ? reset($c['value']) : $c['value'];
+        }
+      }
+    }
+    return FALSE;
   }
 
 }

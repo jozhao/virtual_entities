@@ -160,7 +160,7 @@ class VirtualEntity extends ContentEntityBase implements VirtualEntityInterface 
       $property = $field_definition->getFieldStorageDefinition()->getMainPropertyName();
 
       $offset = 0;
-      // Special case for references to external entities.
+      // Special case for references to virtual entities.
       if (isset($settings['target_type']) && $settings['target_type'] === 'virtual_entity') {
         // Only 1 bundle is allowed.
         $target_bundle = reset($settings['handler_settings']['target_bundles']);

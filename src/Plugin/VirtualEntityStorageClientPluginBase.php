@@ -38,7 +38,13 @@ abstract class VirtualEntityStorageClientPluginBase extends PluginBase implement
     }
 
     // Set decoder.
-    $this->decoder = $this->configuration['decoder'];
+    if(isset($this->configuration['decoder'])) {
+      $this->decoder = $this->configuration['decoder'];
+    }
+    else {
+      // Load decoder from Drupal service.
+      $this->decoder = \Drupal::service('virtual_entity.storage_client.decoder');
+    }
   }
 
   /**

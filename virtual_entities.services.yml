@@ -9,6 +9,6 @@ services:
       - { name: service_collector, tag: virtual_entity_storage_client_decoder, call: addDecoder }
   entity.query.virtual:
     class: Drupal\virtual_entities\Entity\Query\QueryFactory
-    arguments: ['@plugin.manager.virtual_entity.storage_client.plugin.processor', '@http_client', '@entity.manager']
+    arguments: ['@plugin.manager.virtual_entity.storage_client.plugin.processor', '@virtual_entity.storage_client.decoder', '@http_client', '@entity.manager']
     tags:
       - { name: backend_overridable }
