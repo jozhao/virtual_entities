@@ -142,6 +142,7 @@ class Query extends QueryBase implements QueryInterface {
    *   Returns the query result as entity IDs.
    *
    * @see \Drupal\virtual_entities\Plugin\VirtualEntityStorageClientPlugin\Restful
+   * @see \Drupal\field_ui\Form\FieldStorageConfigEditForm
    */
   protected function result() {
     // Load storage client.
@@ -152,6 +153,11 @@ class Query extends QueryBase implements QueryInterface {
     $bundle_id = empty($this->getBundle()) ? key($bundles) : $this->getBundle();
 
     if ($this->count) {
+      $conditions = $this->condition->conditions();
+      // Fix field settings,
+      if (count($conditions) == 1 && (FALSE !== strpos($conditions[0]['field'], '.%delta'))) {
+        return 0;
+      }
       return count($clientLoader->getStorageClient($bundle_id)->query($this->httpClientParameters));
     }
 
