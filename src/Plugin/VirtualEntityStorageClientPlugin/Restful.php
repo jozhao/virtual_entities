@@ -68,7 +68,7 @@ class Restful extends VirtualEntityStorageClientPluginBase {
    */
   public function load($id) {
     // Load from cache.
-    $cid = md5($id);
+    $cid = $id;
     if ($cache = \Drupal::cache('virtual_entity')->get($cid)) {
       $item = $cache->data;
 
