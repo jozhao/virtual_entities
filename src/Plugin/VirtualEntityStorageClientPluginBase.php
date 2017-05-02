@@ -38,7 +38,7 @@ abstract class VirtualEntityStorageClientPluginBase extends PluginBase implement
     }
 
     // Set decoder.
-    if(isset($this->configuration['decoder'])) {
+    if (isset($this->configuration['decoder'])) {
       $this->decoder = $this->configuration['decoder'];
     }
     else {

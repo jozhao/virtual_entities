@@ -154,7 +154,7 @@ class Query extends QueryBase implements QueryInterface {
 
     if ($this->count) {
       $conditions = $this->condition->conditions();
-      // Fix field settings,
+      // Fix field settings.
       if (count($conditions) == 1 && (FALSE !== strpos($conditions[0]['field'], '.%delta'))) {
         return 0;
       }
@@ -184,9 +184,9 @@ class Query extends QueryBase implements QueryInterface {
   /**
    * Set the Parameter.
    *
-   * @param $key
+   * @param string $key
    *   Parameter key.
-   * @param $value
+   * @param string $value
    *   Parameter value.
    *
    * @return bool
@@ -202,7 +202,8 @@ class Query extends QueryBase implements QueryInterface {
   /**
    * Get entity bundle from query conditions.
    *
-   * @param \Drupal\Core\Entity\Query\ConditionInterface|NULL $condition
+   * @param \Drupal\Core\Entity\Query\ConditionInterface|null $condition
+   *   Condition instance.
    *
    * @return bool|mixed
    *   Bundle name or FALSE.
@@ -213,7 +214,7 @@ class Query extends QueryBase implements QueryInterface {
     }
 
     foreach ($condition->conditions() as $c) {
-      if ($c['field'] instanceOf ConditionInterface) {
+      if ($c['field'] instanceof ConditionInterface) {
         $bundle = $this->getBundle($c['field']);
         if ($bundle) {
           return $bundle;

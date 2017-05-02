@@ -20,11 +20,10 @@ use Drupal\Core\Url;
  *   An associative array containing:
  *   - elements: An associative array containing the user information and any
  *   - attributes: HTML attributes for the containing element.
+ *
+ * @usage $virtual_entity = $variables['elements']['#virtual_entity'];
  */
 function template_preprocess_virtual_entity(array &$variables) {
-  // Fetch VirtualEntity Entity Object.
-  $virtual_entity = $variables['elements']['#virtual_entity'];
-
   // Helpful $content variable for templates.
   foreach (Element::children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];

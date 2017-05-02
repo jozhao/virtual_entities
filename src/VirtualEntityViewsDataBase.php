@@ -109,6 +109,7 @@ class VirtualEntityViewsDataBase implements EntityHandlerInterface, EntityViewsD
     if (!isset($this->fieldStorageDefinitions)) {
       $this->fieldStorageDefinitions = $this->entityManager->getFieldStorageDefinitions($this->entityType->id());
     }
+
     return $this->fieldStorageDefinitions;
   }
 
@@ -200,7 +201,7 @@ class VirtualEntityViewsDataBase implements EntityHandlerInterface, EntityViewsD
       $data[$base_table]['table']['join'][$data_table] = [
         'left_field' => $base_field,
         'field' => $base_field,
-        'type' => 'INNER'
+        'type' => 'INNER',
       ];
       $data[$data_table]['table']['group'] = $this->entityType->getLabel();
       $data[$data_table]['table']['provider'] = $this->entityType->getProvider();
@@ -246,7 +247,7 @@ class VirtualEntityViewsDataBase implements EntityHandlerInterface, EntityViewsD
 
     // Add the entity type key to each table generated.
     $entity_type_id = $this->entityType->id();
-    array_walk($data, function(&$table_data) use ($entity_type_id){
+    array_walk($data, function (&$table_data) use ($entity_type_id) {
       $table_data['table']['entity type'] = $entity_type_id;
     });
 
@@ -506,7 +507,9 @@ class VirtualEntityViewsDataBase implements EntityHandlerInterface, EntityViewsD
     //   entity.
     // @see https://www.drupal.org/node/2322949
 
-    if ($entity_type_id = $field_definition->getItemDefinition()->getSetting('target_type')) {
+    if ($entity_type_id = $field_definition->getItemDefinition()
+      ->getSetting('target_type')
+    ) {
       $entity_type = $this->entityManager->getDefinition($entity_type_id);
       if ($entity_type instanceof ContentEntityType) {
         $views_field['relationship'] = [

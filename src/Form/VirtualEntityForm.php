@@ -18,7 +18,6 @@ class VirtualEntityForm extends ContentEntityForm {
   public function buildForm(array $form, FormStateInterface $form_state) {
     /* @var $entity \Drupal\virtual_entities\Entity\VirtualEntity */
     $form = parent::buildForm($form, $form_state);
-    $entity = $this->entity;
 
     return $form;
   }
