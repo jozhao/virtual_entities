@@ -3,12 +3,11 @@
 namespace Drupal\virtual_entities\Entity;
 
 use Drupal\virtual_entities\VirtualEntityViewsDataBase;
-use Drupal\views\EntityViewsDataInterface;
 
 /**
  * Provides Views data for Virtual entity entities.
  */
-class VirtualEntityViewsData extends VirtualEntityViewsDataBase implements EntityViewsDataInterface {
+class VirtualEntityViewsData extends VirtualEntityViewsDataBase {
 
   /**
    * {@inheritdoc}
