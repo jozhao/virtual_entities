@@ -161,9 +161,16 @@ class Query extends QueryBase implements QueryInterface {
       return count($clientLoader->getStorageClient($bundle_id)->query($this->httpClientParameters));
     }
 
+    // Result array.
+    $result = [];
+
     // Fetch entities ids.
     $query_results = $clientLoader->getStorageClient($bundle_id)->query($this->httpClientParameters);
-    $result = [];
+
+    // Return empty results.
+    if (empty($query_results)) {
+      return $result;
+    }
 
     $bundle_entity_type = $this->entityType->getBundleEntityType();
     $bundle = \Drupal::entityTypeManager()->getStorage($bundle_entity_type)->load($bundle_id);

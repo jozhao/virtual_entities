@@ -26,20 +26,8 @@ class Restful extends VirtualEntityStorageClientPluginBase {
    * {@inheritdoc}
    */
   public function query(array $parameters = []) {
-    $parameters = [
-      'apiKey' => 'd73db1da583c4270b749e094c0d5cd2a',
-      'source' => 'abc-news-au',
-      'sortBy' => 'top',
-    ];
-
     try {
-      $response = $this->httpClient->get(
-        $this->configuration['endpoint'],
-        [
-          'query' => $parameters,
-          'headers' => [],
-        ]
-      );
+      $response = $this->httpClient->get($this->configuration['endpoint'], $this->configuration['httpClientParameters']);
 
       // Fetch data contents from remote.
       $data = $response->getBody()->getContents();

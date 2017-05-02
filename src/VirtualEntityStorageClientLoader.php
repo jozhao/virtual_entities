@@ -46,11 +46,16 @@ class VirtualEntityStorageClientLoader {
   public function addStorageClient($bundle_id) {
     // Get bundle settings.
     $bundle = \Drupal::entityTypeManager()->getStorage('virtual_entity_type')->load($bundle_id);
+    $parameters = $bundle->getParameters();
     // Set storage client plugin configuration.
     $plugin_id = $bundle->getClient();
     $plugin_configuration = [
       'endpoint' => $bundle->getEndPoint(),
       'format' => $bundle->getFormat(),
+      'httpClientParameters' => [
+        'headers' => [],
+        'query' => !empty($parameters['list']) ? $parameters['list'] : [],
+      ],
     ];
 
     // Save bundle storage client class.
@@ -63,18 +68,18 @@ class VirtualEntityStorageClientLoader {
   /**
    * Get Storage client.
    *
-   * @param string $build_id
+   * @param string $bundle_id
    *   Bundle id.
    *
    * @return mixed
    *   Storage client instance.
    */
-  public function getStorageClient($build_id) {
-    if (!isset(self::$storageClients[$build_id])) {
-      $this->addStorageClient($build_id);
+  public function getStorageClient($bundle_id) {
+    if (!isset(self::$storageClients[$bundle_id])) {
+      $this->addStorageClient($bundle_id);
     }
 
-    return self::$storageClients[$build_id];
+    return self::$storageClients[$bundle_id];
   }
 
 }
