@@ -39,11 +39,14 @@ class Restful extends VirtualEntityStorageClientPluginBase {
         $entitiesIdentity = (string) $this->configuration['entitiesIdentity'];
         // Check if this identity is available.
         if (isset($results[$entitiesIdentity])) {
-          return (object) $results[$entitiesIdentity];
+          $results = $results[$entitiesIdentity];
         }
       }
 
-      return (object) $results;
+      // Save results.
+      self::$results = (object) $results;
+
+      return self::$results;
     }
     catch (RequestException $e) {
       watchdog_exception('virtual_entities', $e);
@@ -54,21 +57,26 @@ class Restful extends VirtualEntityStorageClientPluginBase {
    * {@inheritdoc}
    */
   public function load($id) {
-    if (NULL == self::$results) {
+    if (empty(self::$results)) {
       self::$results = $this->query();
     }
 
     $items = self::$results;
 
-    // Get entity unique ID.
-    $entityUniqueId = (string) $this->configuration['entityUniqueId'];
+    if (!empty($items)) {
+      // Get entity unique ID.
+      $entityUniqueId = (string) $this->configuration['entityUniqueId'];
 
-    foreach ($items as $item) {
-      $item = (object) $item;
-      if (isset($item->$entityUniqueId) && md5($item->$entityUniqueId) == $id) {
-        return (object) $item;
+      foreach ($items as $item) {
+        $item = (object) $item;
+        if (isset($item->$entityUniqueId) && md5($item->$entityUniqueId) == $id) {
+          return (object) $item;
+        }
       }
     }
+
+    // Return FALSE if this entity is not available.
+    return FALSE;
   }
 
 }
