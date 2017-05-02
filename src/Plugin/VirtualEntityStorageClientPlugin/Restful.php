@@ -67,27 +67,39 @@ class Restful extends VirtualEntityStorageClientPluginBase {
    * {@inheritdoc}
    */
   public function load($id) {
-    if (empty(self::$results)) {
-      // Load from cache.
-      $cid = md5($this->configuration['endpoint']);
-      if ($cache = \Drupal::cache('virtual_entities')->get($cid)) {
-        self::$results = $cache->data;
-      }
-      else {
-        self::$results = $this->query();
-      }
+    // Load from cache.
+    $cid = md5($id);
+    if ($cache = \Drupal::cache('virtual_entity')->get($cid)) {
+      $item = $cache->data;
+
+      return $item;
     }
+    else {
+      if (empty(self::$results)) {
+        // Load from cache.
+        $cid = md5($this->configuration['endpoint']);
+        if ($cache = \Drupal::cache('virtual_entities')->get($cid)) {
+          self::$results = $cache->data;
+        }
+        else {
+          self::$results = $this->query();
+        }
+      }
 
-    $items = self::$results;
+      $items = self::$results;
 
-    if (!empty($items)) {
-      // Get entity unique ID.
-      $entityUniqueId = (string) $this->configuration['entityUniqueId'];
+      if (!empty($items)) {
+        // Get entity unique ID.
+        $entityUniqueId = (string) $this->configuration['entityUniqueId'];
 
-      foreach ($items as $item) {
-        $item = (object) $item;
-        if (isset($item->$entityUniqueId) && md5($item->$entityUniqueId) == $id) {
-          return (object) $item;
+        foreach ($items as $item) {
+          // Make sure item is object.
+          $item = (object) $item;
+          if (isset($item->$entityUniqueId) && md5($item->$entityUniqueId) == $id) {
+            \Drupal::cache('virtual_entity')->set($cid, $item);
+
+            return (object) $item;
+          }
         }
       }
     }
