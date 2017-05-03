@@ -5,3 +5,4 @@ core: 8.x
 package: Content
 dependencies:
   - drupal:system (>=8.3.1)
+  - drupal:serialization
