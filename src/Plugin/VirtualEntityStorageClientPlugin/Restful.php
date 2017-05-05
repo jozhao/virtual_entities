@@ -59,7 +59,7 @@ class Restful extends VirtualEntityStorageClientPluginBase {
       $results = self::$results;
 
       // Return page results.
-      if (!empty($parameters['page_start'] && !empty($parameters['page_size']))) {
+      if (!empty($parameters['page_start']) && !empty($parameters['page_size'])) {
         $results = array_slice($results, $parameters['page_start'], $parameters['page_size']);
       }
 
