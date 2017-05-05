@@ -56,7 +56,14 @@ class Restful extends VirtualEntityStorageClientPluginBase {
         \Drupal::cache('virtual_entities')->set($cid, self::$results);
       }
 
-      return self::$results;
+      $results = self::$results;
+
+      // Return page results.
+      if (!empty($parameters['page_start'] && !empty($parameters['page_size']))) {
+        $results = array_slice($results, $parameters['page_start'], $parameters['page_size']);
+      }
+
+      return $results;
     }
     catch (RequestException $e) {
       watchdog_exception('virtual_entities', $e);

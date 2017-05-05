@@ -40,13 +40,6 @@ class Query extends QueryBase implements QueryInterface {
   protected $httpClient;
 
   /**
-   * The HTTP client parameters.
-   *
-   * @var array
-   */
-  protected $httpClientParameters = [];
-
-  /**
    * The storage client manager.
    *
    * @var \Drupal\Component\Plugin\PluginManagerInterface
@@ -132,6 +125,16 @@ class Query extends QueryBase implements QueryInterface {
    *   Returns the called object.
    */
   protected function finish() {
+    // Page query.
+    $this->initializePager();
+
+    if ($this->range) {
+      $start = $this->range['start'];
+      $end = $this->range['length'];
+      $this->setParameter('page_start', $start);
+      $this->setParameter('page_size', $end);
+    }
+
     return $this;
   }
 
@@ -158,14 +161,14 @@ class Query extends QueryBase implements QueryInterface {
       if (count($conditions) == 1 && (FALSE !== strpos($conditions[0]['field'], '.%delta'))) {
         return 0;
       }
-      return count($clientLoader->getStorageClient($bundle_id)->query($this->httpClientParameters));
+      return count($clientLoader->getStorageClient($bundle_id)->query($this->parameters));
     }
 
     // Result array.
     $result = [];
 
     // Fetch entities ids.
-    $query_results = $clientLoader->getStorageClient($bundle_id)->query($this->httpClientParameters);
+    $query_results = $clientLoader->getStorageClient($bundle_id)->query($this->parameters);
 
     // Return empty results.
     if (empty($query_results)) {
