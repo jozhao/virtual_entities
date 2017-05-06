@@ -59,3 +59,17 @@ function virtual_entities_theme_suggestions_virtual_entity(array $variables) {
 
   return $suggestions;
 }
+
+/**
+ * Virtual entities hash.
+ *
+ * @param string $string
+ *   String.
+ *
+ * @return int
+ *   Return hash value.
+ */
+function virtual_entities_hash($string) {
+  $hash = hash('crc32', $string);
+  return hexdec($hash);
+}

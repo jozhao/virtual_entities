@@ -9,8 +9,9 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Component\Plugin\PluginManagerInterface;
-use GuzzleHttp\ClientInterface;
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use GuzzleHttp\ClientInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -111,6 +112,37 @@ class VirtualEntityStorage extends ContentEntityStorageBase {
   /**
    * {@inheritdoc}
    */
+  protected function doPreSave(EntityInterface $entity) {
+    $id = $entity->id();
+
+    // Track the original ID.
+    if ($entity->getOriginalId() !== NULL) {
+      $id = $entity->getOriginalId();
+    }
+
+    // Track if this entity exists already.
+    $id_exists = $this->has($id, $entity);
+
+    // A new entity should not already exist.
+    if ($id_exists && $entity->isNew()) {
+      throw new EntityStorageException("'{$this->entityTypeId}' entity with ID '$id' already exists.");
+    }
+
+    // Load the original entity, if any.
+    if ($id_exists && !isset($entity->original)) {
+      $entity->original = $this->loadUnchanged($id);
+    }
+
+    // Allow code to run before saving.
+    $entity->preSave($this);
+    $this->invokeHook('presave', $entity);
+
+    return $id;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function doLoadMultiple(array $ids = NULL) {
     $entities = [];
 
@@ -121,7 +153,9 @@ class VirtualEntityStorage extends ContentEntityStorageBase {
           $clientLoader = new VirtualEntityStorageClientLoader($this->storageClientManager);
           $virtualEntity = $clientLoader->getStorageClient($bundle)->load($virtualId);
           if ($virtualEntity) {
-            $entities[$id] = $this->create([$this->entityType->getKey('bundle') => $bundle])->mapObject($virtualEntity)->enforceIsNew(FALSE);
+            $entity = $this->create([$this->entityType->getKey('bundle') => $bundle])->mapObject($virtualEntity);
+            // $this->save($entity->enforceIsNew(TRUE));
+            $entities[$id] = $entity;
           }
         }
       }

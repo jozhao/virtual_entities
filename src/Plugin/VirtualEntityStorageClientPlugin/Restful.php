@@ -28,7 +28,7 @@ class Restful extends VirtualEntityStorageClientPluginBase {
   public function query(array $parameters = []) {
     try {
       // Load from cache.
-      $cid = md5($this->configuration['endpoint']);
+      $cid = virtual_entities_hash($this->configuration['endpoint']);
       if ($cache = \Drupal::cache('virtual_entities')->get($cid)) {
         self::$results = $cache->data;
       }
@@ -52,7 +52,7 @@ class Restful extends VirtualEntityStorageClientPluginBase {
         // Save results.
         self::$results = (object) $results;
         // Save into cache table.
-        $cid = md5($this->configuration['endpoint']);
+        $cid = virtual_entities_hash($this->configuration['endpoint']);
         \Drupal::cache('virtual_entities')->set($cid, self::$results);
       }
 
@@ -84,7 +84,7 @@ class Restful extends VirtualEntityStorageClientPluginBase {
     else {
       if (empty(self::$results)) {
         // Load from cache.
-        $cid = md5($this->configuration['endpoint']);
+        $cid = virtual_entities_hash($this->configuration['endpoint']);
         if ($cache = \Drupal::cache('virtual_entities')->get($cid)) {
           self::$results = $cache->data;
         }
@@ -102,7 +102,7 @@ class Restful extends VirtualEntityStorageClientPluginBase {
         foreach ($items as $item) {
           // Make sure item is object.
           $item = (object) $item;
-          if (isset($item->$entityUniqueId) && md5($item->$entityUniqueId) == $id) {
+          if (isset($item->$entityUniqueId) && virtual_entities_hash($item->$entityUniqueId) == $id) {
             \Drupal::cache('virtual_entity')->set($cid, $item);
 
             return (object) $item;

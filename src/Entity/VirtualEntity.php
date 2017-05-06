@@ -45,6 +45,7 @@ use Drupal\virtual_entities\VirtualEntityInterface;
  *   },
  *   base_table = "virtual_entity",
  *   admin_permission = "administer virtual entity entities",
+ *   static_cache = TRUE,
  *   translatable = FALSE,
  *   entity_keys = {
  *     "id" = "id",
@@ -68,28 +69,6 @@ class VirtualEntity extends ContentEntityBase implements VirtualEntityInterface 
   /**
    * {@inheritdoc}
    */
-  public function preSave(EntityStorageInterface $storage) {
-    parent::preSave($storage);
-
-    if (method_exists($storage, 'preSave')) {
-      $storage->preSave($this);
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function preDelete(EntityStorageInterface $storage, array $entities) {
-    parent::preDelete($storage, $entities);
-
-    if (method_exists($storage, 'preDelete')) {
-      $storage->preDelete($entities);
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getType() {
     return $this->bundle();
   }
@@ -98,7 +77,7 @@ class VirtualEntity extends ContentEntityBase implements VirtualEntityInterface 
    * {@inheritdoc}
    */
   public function virtualId() {
-    return md5(parent::id());
+    return virtual_entities_hash(parent::id());
   }
 
   /**
@@ -146,6 +125,28 @@ class VirtualEntity extends ContentEntityBase implements VirtualEntityInterface 
       ->setDisplayConfigurable('view', TRUE);
 
     return $fields;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function preSave(EntityStorageInterface $storage) {
+    parent::preSave($storage);
+
+    if (method_exists($storage, 'preSave')) {
+      $storage->preSave($this);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function preDelete(EntityStorageInterface $storage, array $entities) {
+    parent::preDelete($storage, $entities);
+
+    if (method_exists($storage, 'preDelete')) {
+      $storage->preDelete($entities);
+    }
   }
 
   /**

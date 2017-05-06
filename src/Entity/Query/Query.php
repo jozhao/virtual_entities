@@ -187,7 +187,7 @@ class Query extends QueryBase implements QueryInterface {
       if (!isset($query_result->{$bundle->getFieldMapping('id')})) {
         continue;
       }
-      $hashed_id = md5($query_result->{$bundle->getFieldMapping('id')});
+      $hashed_id = virtual_entities_hash($query_result->{$bundle->getFieldMapping('id')});
       $id = $bundle_id . '-' . $hashed_id;
       $result[$id] = $id;
     }
