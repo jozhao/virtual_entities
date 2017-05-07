@@ -168,7 +168,10 @@ class Query extends QueryBase implements QueryInterface {
     // Get all the bundles.
     $bundles = \Drupal::service('entity_type.bundle.info')->getBundleInfo($this->entityType->id());
     // Load entity types act as bundles.
-    $bundle_ids = empty($this->getBundle()) ? $bundles : $this->getBundle();
+    if ($this->getBundle()) {
+      $condition_bundle = is_array($this->getBundle()) ? $this->getBundle() : [$this->getBundle()];
+    }
+    $bundle_ids = isset($condition_bundle) ? $condition_bundle : $bundles;
 
     if (is_array($bundle_ids)) {
       // Set the internal pointer of an array to its first element.
