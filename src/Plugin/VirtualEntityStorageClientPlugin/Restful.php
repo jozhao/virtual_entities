@@ -68,6 +68,10 @@ class Restful extends VirtualEntityStorageClientPluginBase {
         self::$results = (object) $results;
         // Save into cache table.
         $cid = virtual_entities_hash($this->configuration['endpoint']);
+        // Add resource type id to cache id.
+        if (!empty($parameters['bundle_id'])) {
+          $cid = $parameters['bundle_id'] . '-' . $cid;
+        }
         \Drupal::cache('virtual_entities')->set($cid, self::$results);
       }
 
