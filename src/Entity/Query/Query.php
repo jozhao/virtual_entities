@@ -151,49 +151,56 @@ class Query extends QueryBase implements QueryInterface {
    * @see \Drupal\field_ui\Form\FieldStorageConfigEditForm
    */
   protected function result() {
-    // Load storage client.
-    $clientLoader = new VirtualEntityStorageClientLoader($this->storageClientManager);
-    // Get all the bundles.
-    $bundles = \Drupal::service('entity_type.bundle.info')->getBundleInfo($this->entityType->id());
-    // Load entity types act as bundles.
-    $bundle_id = empty($this->getBundle()) ? key($bundles) : $this->getBundle();
-    $this->setParameter('bundle_id', $bundle_id);
-
+    // Return 0 if query field delta.
     if ($this->count) {
       $conditions = $this->condition->conditions();
       // Fix field settings.
       if (count($conditions) == 1 && (FALSE !== strpos($conditions[0]['field'], '.%delta'))) {
         return 0;
       }
-      return count($clientLoader->getStorageClient($bundle_id)->query($this->parameters));
     }
 
     // Result array.
     $result = [];
 
-    // Fetch entities ids.
-    $query_results = $clientLoader->getStorageClient($bundle_id)->query($this->parameters);
+    // Load storage client.
+    $clientLoader = new VirtualEntityStorageClientLoader($this->storageClientManager);
+    // Get all the bundles.
+    $bundles = \Drupal::service('entity_type.bundle.info')->getBundleInfo($this->entityType->id());
+    // Load entity types act as bundles.
+    $bundle_ids = empty($this->getBundle()) ? $bundles : $this->getBundle();
 
-    // Return empty results.
-    if (empty($query_results)) {
-      return $result;
+    if (is_array($bundle_ids)) {
+      // Set the internal pointer of an array to its first element.
+      reset($bundle_ids);
+      foreach ($bundle_ids as $bundle_id => $bundle) {
+        $this->setParameter('bundle_id', $bundle_id);
+        // Fetch entities ids.
+        $query_results = (array) $clientLoader->getStorageClient($bundle_id)->query($this->parameters);
+
+        // Fetch entities.
+        $bundle_entity_type = $this->entityType->getBundleEntityType();
+        $bundle = \Drupal::entityTypeManager()->getStorage($bundle_entity_type)->load($bundle_id);
+
+        foreach ($query_results as $query_result) {
+          $query_result = (object) $query_result;
+          if (FALSE === $bundle->getFieldMapping('id')) {
+            continue;
+          }
+          // Continue if unique ID is not available.
+          if (!isset($query_result->{$bundle->getFieldMapping('id')})) {
+            continue;
+          }
+          $hashed_id = virtual_entities_hash($query_result->{$bundle->getFieldMapping('id')});
+          $id = $bundle_id . '-' . $hashed_id;
+          $result[$id] = $id;
+        }
+      }
     }
 
-    $bundle_entity_type = $this->entityType->getBundleEntityType();
-    $bundle = \Drupal::entityTypeManager()->getStorage($bundle_entity_type)->load($bundle_id);
-
-    foreach ($query_results as $query_result) {
-      $query_result = (object) $query_result;
-      if (FALSE === $bundle->getFieldMapping('id')) {
-        continue;
-      }
-      // Continue if unique ID is not available.
-      if (!isset($query_result->{$bundle->getFieldMapping('id')})) {
-        continue;
-      }
-      $hashed_id = virtual_entities_hash($query_result->{$bundle->getFieldMapping('id')});
-      $id = $bundle_id . '-' . $hashed_id;
-      $result[$id] = $id;
+    // Return count numbers.
+    if ($this->count) {
+      return count($result);
     }
 
     return $result;

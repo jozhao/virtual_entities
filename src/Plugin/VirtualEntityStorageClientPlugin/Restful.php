@@ -29,6 +29,10 @@ class Restful extends VirtualEntityStorageClientPluginBase {
     try {
       // Load from cache.
       $cid = virtual_entities_hash($this->configuration['endpoint']);
+      // Add resource type id to cache id.
+      if (!empty($parameters['bundle_id'])) {
+        $cid = $parameters['bundle_id'] . '-' . $cid;
+      }
       if ($cache = \Drupal::cache('virtual_entities')->get($cid)) {
         self::$results = $cache->data;
       }
@@ -50,7 +54,7 @@ class Restful extends VirtualEntityStorageClientPluginBase {
         }
 
         // Save entity for insert/update hooks.
-        if( isset($parameters['entityType'])) {
+        if (isset($parameters['entityType'])) {
           foreach ($results as $result) {
             $result = (object) $result;
             // Save entity to call the insert/update hooks.
