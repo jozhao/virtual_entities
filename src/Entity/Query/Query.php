@@ -93,6 +93,9 @@ class Query extends QueryBase implements QueryInterface {
    * Prepares the basic query with proper metadata/tags and base fields.
    */
   public function prepare() {
+    $this->setParameter('entityTypeId', $this->getEntityTypeId());
+    $this->setParameter('entityType', $this->entityType);
+
     return $this;
   }
 
@@ -154,6 +157,7 @@ class Query extends QueryBase implements QueryInterface {
     $bundles = \Drupal::service('entity_type.bundle.info')->getBundleInfo($this->entityType->id());
     // Load entity types act as bundles.
     $bundle_id = empty($this->getBundle()) ? key($bundles) : $this->getBundle();
+    $this->setParameter('bundle_id', $bundle_id);
 
     if ($this->count) {
       $conditions = $this->condition->conditions();

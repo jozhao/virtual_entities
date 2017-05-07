@@ -49,6 +49,17 @@ class Restful extends VirtualEntityStorageClientPluginBase {
           }
         }
 
+        // Save entity for insert/update hooks.
+        if( isset($parameters['entityType'])) {
+          foreach ($results as $result) {
+            $result = (object) $result;
+            // Save entity to call the insert/update hooks.
+            $bundle = [$parameters['entityType']->getKey('bundle') => $parameters['bundle_id']];
+            $entity = \Drupal::entityTypeManager()->getStorage($parameters['entityTypeId'])->create($bundle)->mapObject($result);
+            \Drupal::entityTypeManager()->getStorage($parameters['entityTypeId'])->save($entity->enforceIsNew(TRUE));
+          }
+        }
+
         // Save results.
         self::$results = (object) $results;
         // Save into cache table.

@@ -153,8 +153,8 @@ class VirtualEntityStorage extends ContentEntityStorageBase {
           $clientLoader = new VirtualEntityStorageClientLoader($this->storageClientManager);
           $virtualEntity = $clientLoader->getStorageClient($bundle)->load($virtualId);
           if ($virtualEntity) {
-            $entity = $this->create([$this->entityType->getKey('bundle') => $bundle])->mapObject($virtualEntity);
-            // $this->save($entity->enforceIsNew(TRUE));
+            // While loading virtual entities, force them not new entities.
+            $entity = $this->create([$this->entityType->getKey('bundle') => $bundle])->mapObject($virtualEntity)->enforceIsNew(FALSE);
             $entities[$id] = $entity;
           }
         }
