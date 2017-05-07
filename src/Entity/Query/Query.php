@@ -163,19 +163,26 @@ class Query extends QueryBase implements QueryInterface {
     // Result array.
     $result = [];
 
-    // Load storage client.
-    $clientLoader = new VirtualEntityStorageClientLoader($this->storageClientManager);
-    // Get all the bundles.
-    $bundles = \Drupal::service('entity_type.bundle.info')->getBundleInfo($this->entityType->id());
-    // Load entity types act as bundles.
-    if ($this->getBundle()) {
-      $condition_bundle = is_array($this->getBundle()) ? $this->getBundle() : [$this->getBundle()];
+    // Set condition bundle if available..
+    if (!empty($this->getBundle())) {
+      $condition_bundle = $this->getBundle();
     }
-    $bundle_ids = isset($condition_bundle) ? $condition_bundle : $bundles;
 
-    if (is_array($bundle_ids)) {
+    // Set bundles.
+    if (isset($condition_bundle)) {
+      $bundle_ids = $condition_bundle;
+    }
+    else {
+      $bundle_ids = \Drupal::service('entity_type.bundle.info')->getBundleInfo($this->entityType->id());
+    }
+
+    if (!empty($bundle_ids) && is_array($bundle_ids)) {
+      // Load storage client.
+      $clientLoader = new VirtualEntityStorageClientLoader($this->storageClientManager);
+
       // Set the internal pointer of an array to its first element.
       reset($bundle_ids);
+
       foreach ($bundle_ids as $bundle_id => $bundle) {
         $this->setParameter('bundle_id', $bundle_id);
         // Fetch entities ids.
@@ -241,20 +248,30 @@ class Query extends QueryBase implements QueryInterface {
       $condition = $this->condition;
     }
 
+    $bundles = [];
+
     foreach ($condition->conditions() as $c) {
       if ($c['field'] instanceof ConditionInterface) {
         $bundle = $this->getBundle($c['field']);
         if ($bundle) {
-          return $bundle;
+          return $bundles[$bundle] = $bundle;
         }
       }
       else {
         if ($c['field'] == $this->entityType->getKey('bundle')) {
-          return is_array($c['value']) ? reset($c['value']) : $c['value'];
+          if (is_array($c['value'])) {
+            foreach ($c['value'] as $bundle) {
+              $bundles[$bundle] = $bundle;
+            }
+          }
+          else {
+            $bundles[$c['value']] = $c['value'];
+          }
         }
       }
     }
-    return FALSE;
+
+    return reset($bundles);
   }
 
 }
